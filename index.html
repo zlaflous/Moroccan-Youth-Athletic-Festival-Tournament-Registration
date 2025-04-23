@@ -104,13 +104,21 @@
     }).render('#paypal-button-container');
 
     function generateQRCode() {
-        const childInfo = formData.children.map((c, i) => `Child ${i+1}: ${c.name}, Age: ${c.age}, Team: ${c.team}`).join('\n');
-        const qrData = `Parent: ${formData.parentName}\nEmail: ${formData.parentEmail}\nPhone: ${formData.parentPhone}\n${childInfo}\nTicket ID: ${formData.ticketId}`;
-        QRCode.toCanvas(document.createElement('canvas'), qrData, { width: 200 }, function (error, canvas) {
-            if (error) console.error(error);
-            document.getElementById('qr-code').appendChild(canvas);
-        });
-    }
+    const childInfo = formData.children.map((c, i) => `Child ${i+1}: ${c.name}, Age: ${c.age}, Team: ${c.team}`).join('\\n');
+    const qrData = `Parent: ${formData.parentName}\\nEmail: ${formData.parentEmail}\\nPhone: ${formData.parentPhone}\\n${childInfo}\\nTicket ID: ${formData.ticketId}`;
+
+    QRCode.toDataURL(qrData, { width: 200 }, function (error, url) {
+        if (error) return console.error(error);
+
+        document.getElementById('qr-code').innerHTML = `<img src=\"${url}\" alt=\"QR Code Ticket\">`;
+
+        // Store the base64 image URL
+        formData.qrImage = url;
+
+        sendTicketByEmail(); // Send email AFTER QR is generated
+    });
+}
+
 
     function sendTicketByEmail() {
         const childSummary = formData.children.map((c, i) => `Child ${i+1}: ${c.name}, Age: ${c.age}, Team: ${c.team}`).join('\n');
