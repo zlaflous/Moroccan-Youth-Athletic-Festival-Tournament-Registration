@@ -105,19 +105,15 @@
 
     function generateQRCode() {
     const childInfo = formData.children
-        .map((c, i) => `Child ${i + 1}: ${c.name}, Age: ${c.age}, Team: ${c.team}`)
-        .join('\n');
+        .map((c, i) => `Child ${i + 1}: ${c.name}, ${c.age}, ${c.team}`)
+        .join(' | ');
 
-    const qrData = `Parent: ${formData.parentName}
-Email: ${formData.parentEmail}
-Phone: ${formData.parentPhone}
-${childInfo}
-Ticket ID: ${formData.ticketId}`;
+    const qrData = `Parent: ${formData.parentName} | Email: ${formData.parentEmail} | Phone: ${formData.parentPhone} | ${childInfo} | Ticket ID: ${formData.ticketId}`;
 
     QRCode.toDataURL(qrData, { width: 200 }, function (error, url) {
         if (error) return console.error(error);
 
-        document.getElementById('qr-code').innerHTML = `<img src=\"${url}\" alt=\"QR Code Ticket\">`;
+        document.getElementById('qr-code').innerHTML = `<img src="${url}" alt="QR Code Ticket">`;
 
         formData.qrImage = url;
         sendTicketByEmail();
