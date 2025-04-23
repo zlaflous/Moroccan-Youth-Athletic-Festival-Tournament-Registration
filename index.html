@@ -123,17 +123,13 @@
     function sendTicketByEmail() {
         const childSummary = formData.children.map((c, i) => `Child ${i+1}: ${c.name}, Age: ${c.age}, Team: ${c.team}`).join('\n');
         emailjs.send("service_1en0k3n", "service_1en0k3n", {
-            name: formData.parentName,
-            email: formData.parentEmail,
-            phone: formData.parentPhone,
-            ticket_id: formData.ticketId,
-            children: childSummary
-        }).then(function(response) {
-            alert('Registration complete! Check your email for your QR code ticket.');
-        }, function(error) {
-            console.error('FAILED...', error);
-            alert('Registration complete, but failed to send email.');
-        });
+			name: formData.parentName,
+			email: formData.parentEmail,
+			phone: formData.parentPhone,
+			ticket_id: formData.ticketId,
+			children: formData.children.map((c, i) => `Child ${i+1}: ${c.name}, Age: ${c.age}, Team: ${c.team}`).join('\\n'),
+			qr_image: formData.qrImage
+})
     }
 
     // Auto add first participant
