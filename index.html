@@ -8,9 +8,10 @@
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <script src="https://www.paypal.com/sdk/js?client-id=ASNXc-c_Ozu9IRC4ILp5oC6VOLz18amVlbYfVnKYA2kvJIBlQnoLUPP-Rdz4J_vyMD5toHUwg-OQH-OX&currency=USD"></script> <!-- Replace 'sb' with live Client ID -->
     <style>
-        body { font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; }
+        body { font-family: Arial, sans-serif; max-width: 700px; margin: auto; padding: 20px; }
         input, button { width: 100%; margin: 10px 0; padding: 10px; }
         #qr-code { margin-top: 20px; text-align: center; }
+        .child-block { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 6px; }
     </style>
 </head>
 <body>
@@ -18,30 +19,66 @@
 <h2>Register for Moroccan Youth Athletic Festival - Spring 2025</h2>
 
 <form id="registration-form">
-    <input type="text" id="name" placeholder="Full Name" required>
-    <input type="email" id="email" placeholder="Email Address" required>
-    <input type="text" id="phone" placeholder="Phone Number" required>
-    <input type="text" id="team" placeholder="Team Name (Optional)">
+    <h3>Parent Information</h3>
+    <input type="text" id="parentName" placeholder="Parent Full Name" required>
+    <input type="email" id="parentEmail" placeholder="Parent Email Address" required>
+    <input type="text" id="parentPhone" placeholder="Phone Number" required>
+
+    <h3>Participants</h3>
+    <div id="children"></div>
+    <button type="button" onclick="addParticipant()">+ Add Participant</button>
+
+    <h4>Total: $<span id="totalAmount">0</span></h4>
     <button type="submit">Proceed to Payment</button>
 </form>
 
 <div id="paypal-button-container" style="display:none;"></div>
-
 <div id="qr-code"></div>
 
 <script>
-    emailjs.init("zlaflous@gmail.com"); // Replace with your EmailJS user ID
+    emailjs.init("zlaflous@gmail.com");
 
     let formData = {};
+    let children = [];
+
+    function addParticipant() {
+        const index = children.length;
+        const childBlock = document.createElement('div');
+        childBlock.className = 'child-block';
+        childBlock.innerHTML = `
+            <input type="text" placeholder="Child ${index + 1} Full Name" required>
+            <input type="number" placeholder="Child ${index + 1} Age" required>
+            <input type="text" placeholder="Child ${index + 1} Team Name (Optional)">
+        `;
+        document.getElementById('children').appendChild(childBlock);
+        children.push(childBlock);
+        updateTotal();
+    }
+
+    function updateTotal() {
+        document.getElementById('totalAmount').textContent = children.length * 10;
+    }
 
     document.getElementById('registration-form').addEventListener('submit', function(e) {
         e.preventDefault();
+
+        const childData = [];
+        children.forEach(block => {
+            const inputs = block.querySelectorAll('input');
+            childData.push({
+                name: inputs[0].value,
+                age: inputs[1].value,
+                team: inputs[2].value || 'N/A'
+            });
+        });
+
         formData = {
-            name: document.getElementById('name').value,
-            email: document.getElementById('email').value,
-            phone: document.getElementById('phone').value,
-            team: document.getElementById('team').value || 'N/A',
-            ticketId: 'TICKET-' + Date.now()
+            parentName: document.getElementById('parentName').value,
+            parentEmail: document.getElementById('parentEmail').value,
+            parentPhone: document.getElementById('parentPhone').value,
+            children: childData,
+            ticketId: 'TICKET-' + Date.now(),
+            total: children.length * 10
         };
 
         document.getElementById('registration-form').style.display = 'none';
@@ -52,7 +89,7 @@
         createOrder: function(data, actions) {
             return actions.order.create({
                 purchase_units: [{
-                    amount: { value: '10.00' },
+                    amount: { value: formData.total.toFixed(2) },
                     payee: { email_address: 'ourmasar@gmail.com' },
                     description: 'Moroccan Youth Athletic Festival - Spring 2025 Registration'
                 }]
@@ -67,7 +104,8 @@
     }).render('#paypal-button-container');
 
     function generateQRCode() {
-        const qrData = `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nTeam: ${formData.team}\nTicket ID: ${formData.ticketId}`;
+        const childInfo = formData.children.map((c, i) => `Child ${i+1}: ${c.name}, Age: ${c.age}, Team: ${c.team}`).join('\n');
+        const qrData = `Parent: ${formData.parentName}\nEmail: ${formData.parentEmail}\nPhone: ${formData.parentPhone}\n${childInfo}\nTicket ID: ${formData.ticketId}`;
         QRCode.toCanvas(document.createElement('canvas'), qrData, { width: 200 }, function (error, canvas) {
             if (error) console.error(error);
             document.getElementById('qr-code').appendChild(canvas);
@@ -75,12 +113,13 @@
     }
 
     function sendTicketByEmail() {
+        const childSummary = formData.children.map((c, i) => `Child ${i+1}: ${c.name}, Age: ${c.age}, Team: ${c.team}`).join('\n');
         emailjs.send("service_1en0k3n", "service_1en0k3n", {
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            team: formData.team,
-            ticket_id: formData.ticketId
+            name: formData.parentName,
+            email: formData.parentEmail,
+            phone: formData.parentPhone,
+            ticket_id: formData.ticketId,
+            children: childSummary
         }).then(function(response) {
             alert('Registration complete! Check your email for your QR code ticket.');
         }, function(error) {
@@ -88,6 +127,9 @@
             alert('Registration complete, but failed to send email.');
         });
     }
+
+    // Auto add first participant
+    addParticipant();
 </script>
 
 </body>
