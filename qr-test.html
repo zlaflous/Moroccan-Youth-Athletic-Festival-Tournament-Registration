@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+</head>
+<body>
+  <h2>Test QR Code</h2>
+  <div id="qr"></div>
+
+  <script>
+    const qrData = "Parent: John Doe | Email: john@example.com | Phone: 1234567890 | Child 1: Sara, 10, Lions | Ticket ID: TICKET-1234";
+
+    QRCode.toDataURL(qrData, { width: 200 }, function (err, url) {
+      if (err) return console.error(err);
+      document.getElementById("qr").innerHTML = `<img src="${url}" alt="QR">`;
+    });
+  </script>
+</body>
+</html>
