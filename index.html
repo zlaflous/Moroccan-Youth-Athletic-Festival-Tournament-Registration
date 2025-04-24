@@ -156,9 +156,11 @@
     document.getElementById('registration-form').addEventListener('submit', function(e) {
       e.preventDefault();
 
+      
       const childData = [];
       children.forEach(block => {
         const inputs = block.querySelectorAll('input, select');
+        const waiverCheckbox = block.querySelector('input[type="checkbox"]');
         childData.push({
           firstName: inputs[0].value,
           lastName: inputs[1].value,
@@ -166,8 +168,10 @@
           gender: inputs[3].value,
           team: inputs[4].value || 'N/A',
           level: inputs[5].value,
-          waiver: inputs[6].checked
+          waiver: waiverCheckbox ? waiverCheckbox.checked : false
         });
+      });
+
       });
 
       formData = {
