@@ -187,6 +187,7 @@ formData = {
 
       document.getElementById('registration-form').style.display = 'none';
       document.getElementById('paypal-button-container').style.display = 'block';
+      generateQRCode(); // 👈 Add this line temporarily for testing
     });
 
     paypal.Buttons({
