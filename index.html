@@ -220,17 +220,6 @@ formData = {
         sendTicketByEmail();
       });
     }
-      fetch("https://script.google.com/macros/s/AKfycbz8bV0Tzm6rqVkBfsmjt1RxHK8sp6P-_xk0xU87JAJajp0B0Dd4KNfduX0OZsgurVA/exec", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify(formData)
-})
-.then(response => response.text())
-.then(data => console.log("Google Sheets:", data))
-.catch(err => console.error("Google Sheets Error:", err));
-
     function sendTicketByEmail() {
       const childSummary = formData.children
         .map((c, i) => `Child ${i + 1}: ${c.firstName} ${c.lastName}, DOB: ${c.dob}, Gender: ${c.gender}, Team: ${c.team}, Level: ${c.level}`)
