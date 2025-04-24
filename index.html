@@ -157,18 +157,23 @@
       e.preventDefault();
 
       const childData = [];
-      children.forEach(block => {
-        const inputs = block.querySelectorAll('input, select');
-        childData.push({
-          firstName: inputs[0].value,
-          lastName: inputs[1].value,
-          dob: inputs[2].value,
-          gender: inputs[3].value,
-          team: inputs[4].value || 'N/A',
-          level: inputs[5].value,
-          waiver: inputs[6].checked
-        });
-      });
+children.forEach(block => {
+  const inputs = block.querySelectorAll('input, select');
+  const waiverCheckbox = block.querySelector('input[type="checkbox"]');
+
+  // Skip malformed blocks
+  if (inputs.length < 6 || !waiverCheckbox) return;
+
+  childData.push({
+    firstName: inputs[0].value,
+    lastName: inputs[1].value,
+    dob: inputs[2].value,
+    gender: inputs[3].value,
+    team: inputs[4].value || 'N/A',
+    level: inputs[5].value,
+    waiver: waiverCheckbox.checked
+  });
+});
 
       formData = {
         parentName: document.getElementById('parentName').value,
