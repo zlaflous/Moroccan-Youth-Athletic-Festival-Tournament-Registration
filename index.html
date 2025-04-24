@@ -6,7 +6,7 @@
   <title>Moroccan Youth Athletic Festival - Spring 2025 Registration</title>
   <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-  <script src="https://www.paypal.com/sdk/js?client-id=ASNXc-c_Ozu9IRC4ILp5oC6VOLz18amVlbYfVnKYA2kvJIBlQnoLUPP-Rdz4J_vyMD5toHUwg-OQH-OX&currency=USD"></script>
+  <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD"></script>
   <style>
     :root {
       --masar-red: #b03a2e;
@@ -156,11 +156,9 @@
     document.getElementById('registration-form').addEventListener('submit', function(e) {
       e.preventDefault();
 
-      
       const childData = [];
       children.forEach(block => {
         const inputs = block.querySelectorAll('input, select');
-        const waiverCheckbox = block.querySelector('input[type="checkbox"]');
         childData.push({
           firstName: inputs[0].value,
           lastName: inputs[1].value,
@@ -168,10 +166,8 @@
           gender: inputs[3].value,
           team: inputs[4].value || 'N/A',
           level: inputs[5].value,
-          waiver: waiverCheckbox ? waiverCheckbox.checked : false
+          waiver: inputs[6].checked
         });
-      });
-
       });
 
       formData = {
