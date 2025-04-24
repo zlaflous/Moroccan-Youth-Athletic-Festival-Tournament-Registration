@@ -189,7 +189,7 @@ formData = {
       document.getElementById('paypal-button-container').style.display = 'block';
     });
 
-    paypal.Buttons({
+    /* paypal.Buttons({
       createOrder: function(data, actions) {
         return actions.order.create({
           purchase_units: [{
@@ -218,7 +218,7 @@ formData = {
           });
         });
       }
-    }).render('#paypal-button-container');
+    }).render('#paypal-button-container'); */
 
     function generateQRCode() {
       const childInfo = formData.children
