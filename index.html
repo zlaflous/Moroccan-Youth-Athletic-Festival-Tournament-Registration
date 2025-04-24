@@ -49,8 +49,7 @@
         childBlock.innerHTML = `
             <input type="text" placeholder="Participant First Name" required>
             <input type="text" placeholder="Participant Last Name" required>
-            <label for="dob">Date of Birth <small>(MM/DD/YYYY)</small></label>
-            <input type="date" name="dob" required>
+            <input type="text" placeholder="Date of Birth (MM/DD/YYYY)" pattern="\\d{2}/\\d{2}/\\d{4}" required>
             <select required>
                 <option value="">Select Gender</option>
                 <option value="Male">Male</option>
