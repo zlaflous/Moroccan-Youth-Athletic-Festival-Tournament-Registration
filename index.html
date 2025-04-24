@@ -202,6 +202,20 @@ formData = {
       onApprove: function(data, actions) {
         return actions.order.capture().then(function(details) {
           generateQRCode();
+
+          // Send data to Google Sheet
+          fetch("https://script.google.com/macros/s/AKfycbxwbFnfi_pZcduAxwOuYEtqiDkyIua6dViBBK6LNoem6MzzwaqWYOY_vLjWf8Eu1ICxpQ/exec", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(formData)
+          })
+          .then(res => res.json())
+          .then(res => {
+            console.log("Google Sheet response:", res);
+          })
+          .catch(err => {
+            console.error("Error sending data to Google Sheet:", err);
+          });
         });
       }
     }).render('#paypal-button-container');
