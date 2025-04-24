@@ -22,7 +22,7 @@
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: var(--light-bg);
+      background-color: #ffffff;
       padding: 30px;
       margin: 0;
     }
@@ -142,7 +142,11 @@
         <div class="waiver-text">
           I, the parent or legal guardian of the participant, give permission for my child to take part in the Moroccan Youth Athletic Festival – Soccer Tournament. I understand that participation in sports involves certain risks of injury and voluntarily assume all such risks. I release MASAR, event organizers, coaches, and volunteers from any liability for injuries or damages that may occur during the event. I authorize emergency medical treatment if needed and accept responsibility for any associated costs. I also give permission for my child’s photos or videos to be used for promotional purposes without compensation. I confirm my child is in good health and able to participate.
         </div>
-        <label><input type="checkbox" required> I agree to the waiver and terms.</label>
+        <div style="margin-top: 10px;">
+  <label style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
+    <input type="checkbox" required style="width: auto; margin: 0;"> I agree to the waiver and terms.
+  </label>
+</div>
       `;
       document.getElementById('children').appendChild(childBlock);
       children.push(childBlock);
