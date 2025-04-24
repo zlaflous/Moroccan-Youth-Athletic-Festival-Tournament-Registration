@@ -9,9 +9,10 @@
     <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD"></script> <!-- Replace 'sb' with live Client ID -->
     <style>
         body { font-family: Arial, sans-serif; max-width: 700px; margin: auto; padding: 20px; }
-        input, select, button, label { width: 100%; margin: 10px 0; padding: 10px; }
+        input, select, button, label, textarea { width: 100%; margin: 10px 0; padding: 10px; }
         #qr-code { margin-top: 20px; text-align: center; }
         .child-block { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 6px; }
+        .waiver-text { font-size: 14px; line-height: 1.6; background: #f9f9f9; padding: 10px; border-left: 4px solid #c1272d; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -53,8 +54,12 @@
                 <option value="">Select Gender</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
+                <option value="Other">Other</option>
             </select>
             <input type="text" placeholder="Team Name (Optional)">
+            <div class="waiver-text">
+                I, the parent or legal guardian of the participant, give permission for my child to take part in the Moroccan Youth Athletic Festival – Soccer Tournament. I understand that participation in sports involves certain risks of injury and voluntarily assume all such risks. I release MASAR, event organizers, coaches, and volunteers from any liability for injuries or damages that may occur during the event. I authorize emergency medical treatment if needed and accept responsibility for any associated costs. I also give permission for my child’s photos or videos to be used for promotional purposes without compensation. I confirm my child is in good health and able to participate.
+            </div>
             <label><input type="checkbox" required> I agree to the waiver and terms.</label>
         `;
         document.getElementById('children').appendChild(childBlock);
