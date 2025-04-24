@@ -54,8 +54,14 @@
                 <option value="">Select Gender</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
+                <option value="Other">Other</option>
             </select>
             <input type="text" placeholder="Team Name (Optional)">
+            <select required>
+                <option value="">Select Soccer Level</option>
+                <option value="Recreational">Recreational</option>
+                <option value="Travel">Travel</option>
+            </select>
             <div class="waiver-text">
                 I, the parent or legal guardian of the participant, give permission for my child to take part in the Moroccan Youth Athletic Festival – Soccer Tournament. I understand that participation in sports involves certain risks of injury and voluntarily assume all such risks. I release MASAR, event organizers, coaches, and volunteers from any liability for injuries or damages that may occur during the event. I authorize emergency medical treatment if needed and accept responsibility for any associated costs. I also give permission for my child’s photos or videos to be used for promotional purposes without compensation. I confirm my child is in good health and able to participate.
             </div>
@@ -82,7 +88,8 @@
                 dob: inputs[2].value,
                 gender: inputs[3].value,
                 team: inputs[4].value || 'N/A',
-                waiver: inputs[5].checked
+                level: inputs[5].value,
+                waiver: inputs[6].checked
             });
         });
 
@@ -118,7 +125,7 @@
 
     function generateQRCode() {
         const childInfo = formData.children
-            .map((c, i) => `Child ${i + 1}: ${c.firstName} ${c.lastName}, DOB: ${c.dob}, Gender: ${c.gender}, Team: ${c.team}`)
+            .map((c, i) => `Child ${i + 1}: ${c.firstName} ${c.lastName}, DOB: ${c.dob}, Gender: ${c.gender}, Team: ${c.team}, Level: ${c.level}`)
             .join(' | ');
 
         const qrData = `Parent: ${formData.parentName} | Email: ${formData.parentEmail} | Phone: ${formData.parentPhone} | ${childInfo} | Ticket ID: ${formData.ticketId}`;
@@ -133,7 +140,7 @@
 
     function sendTicketByEmail() {
         const childSummary = formData.children
-            .map((c, i) => `Child ${i + 1}: ${c.firstName} ${c.lastName}, DOB: ${c.dob}, Gender: ${c.gender}, Team: ${c.team}`)
+            .map((c, i) => `Child ${i + 1}: ${c.firstName} ${c.lastName}, DOB: ${c.dob}, Gender: ${c.gender}, Team: ${c.team}, Level: ${c.level}`)
             .join('\n');
 
         emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
