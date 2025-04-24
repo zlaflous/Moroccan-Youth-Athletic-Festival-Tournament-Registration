@@ -218,6 +218,7 @@ formData = {
         if (error) return console.error(error);
         document.getElementById('qr-code').innerHTML = `<img src="${url}" alt="QR Code Ticket">`;
         formData.qrImage = url;
+        console.log("Sending this to Google Sheets:", formData);
         // ✅ Google Sheets Integration
           fetch("https://script.google.com/macros/s/AKfycbzdlQkbFWPxbZwfoX4y1ijtwCXK8WFExD280XqoumX7xRwXTv_KJKN0F5SP6Muf9A8NBQ/exec", {
           method: "POST",
