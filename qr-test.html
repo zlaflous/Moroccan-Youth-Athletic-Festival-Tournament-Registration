@@ -1,19 +1,156 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moroccan Youth Athletic Festival - Spring 2025 Registration</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD"></script> <!-- Replace 'sb' with live Client ID -->
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 700px; margin: auto; padding: 20px; }
+        input, select, button, label { width: 100%; margin: 10px 0; padding: 10px; }
+        #qr-code { margin-top: 20px; text-align: center; }
+        .child-block { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 6px; }
+    </style>
 </head>
 <body>
-  <h2>Test QR Code</h2>
-  <div id="qr"></div>
 
-  <script>
-    const qrData = "Parent: John Doe | Email: john@example.com | Phone: 1234567890 | Child 1: Sara, 10, Lions | Ticket ID: TICKET-1234";
+<h2>Register for Moroccan Youth Athletic Festival - Spring 2025</h2>
 
-    QRCode.toDataURL(qrData, { width: 200 }, function (err, url) {
-      if (err) return console.error(err);
-      document.getElementById("qr").innerHTML = `<img src="${url}" alt="QR">`;
+<form id="registration-form">
+    <h3>Parent Information</h3>
+    <input type="text" id="parentName" placeholder="Parent Full Name" required>
+    <input type="email" id="parentEmail" placeholder="Parent Email Address" required>
+    <input type="text" id="parentPhone" placeholder="Phone Number" required>
+
+    <h3>Participants</h3>
+    <div id="children"></div>
+    <button type="button" onclick="addParticipant()">+ Add Participant</button>
+
+    <h4>Total: $<span id="totalAmount">0</span></h4>
+    <button type="submit">Proceed to Payment</button>
+</form>
+
+<div id="paypal-button-container" style="display:none;"></div>
+<div id="qr-code"></div>
+
+<script>
+    emailjs.init("YOUR_EMAILJS_USER_ID");
+
+    let formData = {};
+    let children = [];
+
+    function addParticipant() {
+        const index = children.length;
+        const childBlock = document.createElement('div');
+        childBlock.className = 'child-block';
+        childBlock.innerHTML = `
+            <input type="text" placeholder="Participant First Name" required>
+            <input type="text" placeholder="Participant Last Name" required>
+            <input type="date" placeholder="Date of Birth" required>
+            <select required>
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+            <input type="text" placeholder="Team Name (Optional)">
+            <label><input type="checkbox" required> I agree to the waiver and terms.</label>
+        `;
+        document.getElementById('children').appendChild(childBlock);
+        children.push(childBlock);
+        updateTotal();
+    }
+
+    function updateTotal() {
+        document.getElementById('totalAmount').textContent = children.length * 10;
+    }
+
+    document.getElementById('registration-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const childData = [];
+        children.forEach(block => {
+            const inputs = block.querySelectorAll('input, select');
+            childData.push({
+                firstName: inputs[0].value,
+                lastName: inputs[1].value,
+                dob: inputs[2].value,
+                gender: inputs[3].value,
+                team: inputs[4].value || 'N/A',
+                waiver: inputs[5].checked
+            });
+        });
+
+        formData = {
+            parentName: document.getElementById('parentName').value,
+            parentEmail: document.getElementById('parentEmail').value,
+            parentPhone: document.getElementById('parentPhone').value,
+            children: childData,
+            ticketId: 'TICKET-' + Date.now(),
+            total: children.length * 10
+        };
+
+        document.getElementById('registration-form').style.display = 'none';
+        document.getElementById('paypal-button-container').style.display = 'block';
     });
-  </script>
+
+    paypal.Buttons({
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: { value: formData.total.toFixed(2) },
+                    payee: { email_address: 'ourmasar@gmail.com' },
+                    description: 'Moroccan Youth Athletic Festival - Spring 2025 Registration'
+                }]
+            });
+        },
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                generateQRCode();
+            });
+        }
+    }).render('#paypal-button-container');
+
+    function generateQRCode() {
+        const childInfo = formData.children
+            .map((c, i) => `Child ${i + 1}: ${c.firstName} ${c.lastName}, DOB: ${c.dob}, Gender: ${c.gender}, Team: ${c.team}`)
+            .join(' | ');
+
+        const qrData = `Parent: ${formData.parentName} | Email: ${formData.parentEmail} | Phone: ${formData.parentPhone} | ${childInfo} | Ticket ID: ${formData.ticketId}`;
+
+        QRCode.toDataURL(qrData, { width: 200 }, function (error, url) {
+            if (error) return console.error(error);
+            document.getElementById('qr-code').innerHTML = `<img src="${url}" alt="QR Code Ticket">`;
+            formData.qrImage = url;
+            sendTicketByEmail();
+        });
+    }
+
+    function sendTicketByEmail() {
+        const childSummary = formData.children
+            .map((c, i) => `Child ${i + 1}: ${c.firstName} ${c.lastName}, DOB: ${c.dob}, Gender: ${c.gender}, Team: ${c.team}`)
+            .join('\n');
+
+        emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+            name: formData.parentName,
+            email: formData.parentEmail,
+            phone: formData.parentPhone,
+            ticket_id: formData.ticketId,
+            children: childSummary,
+            qr_image: formData.qrImage
+        }).then(function(response) {
+            alert('Registration complete! Check your email for your QR code ticket.');
+        }, function(error) {
+            console.error('FAILED...', error);
+            alert('Registration complete, but failed to send email.');
+        });
+    }
+
+    // Auto add one participant on load
+    addParticipant();
+</script>
+
 </body>
 </html>
