@@ -9,28 +9,32 @@
       function addParticipant() {
         const container = document.getElementById("participants-container");
         const index = container.children.length + 1;
+        const id = `participant-\${Date.now()}`;
 
         const html = `
-        <div class="box mt-4">
-          <h3 class="title is-5">Participant \${index}</h3>
+        <div class="box mt-4" id="\${id}">
+          <div class="is-flex is-justify-content-space-between">
+            <h3 class="title is-5">Participant \${index}</h3>
+            <button class="delete" type="button" onclick="removeParticipant('\${id}')"></button>
+          </div>
           <div class="field">
             <label class="label">First Name</label>
             <div class="control">
-              <input class="input" type="text" name="Participant First Name \${index}" placeholder="First Name" />
+              <input class="input" type="text" name="Participant First Name[]" placeholder="First Name" required />
             </div>
           </div>
 
           <div class="field">
             <label class="label">Last Name</label>
             <div class="control">
-              <input class="input" type="text" name="Participant Last Name \${index}" placeholder="Last Name" />
+              <input class="input" type="text" name="Participant Last Name[]" placeholder="Last Name" required />
             </div>
           </div>
 
           <div class="field">
             <label class="label">Date of Birth</label>
             <div class="control">
-              <input class="input" type="date" name="Participant DOB \${index}" />
+              <input class="input" type="date" name="Participant DOB[]" required />
             </div>
           </div>
 
@@ -38,10 +42,10 @@
             <label class="label">Gender</label>
             <div class="control">
               <label class="radio">
-                <input type="radio" name="Gender \${index}" value="male" /> Male
+                <input type="radio" name="Gender-\${id}" value="male" /> Male
               </label>
               <label class="radio">
-                <input type="radio" name="Gender \${index}" value="female" /> Female
+                <input type="radio" name="Gender-\${id}" value="female" /> Female
               </label>
             </div>
           </div>
@@ -50,7 +54,7 @@
             <label class="label">Soccer Level</label>
             <div class="control">
               <div class="select">
-                <select name="Soccer Level \${index}">
+                <select name="Soccer Level[]">
                   <option value="recreational">Recreational</option>
                   <option value="travel">Travel</option>
                 </select>
@@ -60,6 +64,13 @@
         </div>`;
 
         container.insertAdjacentHTML("beforeend", html);
+      }
+
+      function removeParticipant(id) {
+        const element = document.getElementById(id);
+        if (element) {
+          element.remove();
+        }
       }
     </script>
   </head>
@@ -77,21 +88,21 @@
       <div class="field">
         <label class="label">Full Name</label>
         <div class="control">
-          <input class="input" type="text" name="Parent Full Name" placeholder="Full Name" />
+          <input class="input" type="text" name="Parent Full Name" placeholder="Full Name" required />
         </div>
       </div>
 
       <div class="field">
         <label class="label">Email</label>
         <div class="control">
-          <input class="input" type="email" name="Parent Email" placeholder="Email Address" />
+          <input class="input" type="email" name="Parent Email" placeholder="Email Address" required />
         </div>
       </div>
 
       <div class="field">
         <label class="label">Phone Number</label>
         <div class="control">
-          <input class="input" type="tel" name="Parent Phone" placeholder="Phone Number" />
+          <input class="input" type="tel" name="Parent Phone" placeholder="Phone Number" required />
         </div>
       </div>
 
@@ -146,7 +157,7 @@ I, the parent or legal guardian of the participant, give permission for my child
         var formData = new FormData(this);
         var keyValuePairs = [];
         for (var pair of formData.entries()) {
-          keyValuePairs.push(pair[0] + "=" + pair[1]);
+          keyValuePairs.push(pair[0] + "=" + encodeURIComponent(pair[1]));
         }
 
         var formDataString = keyValuePairs.join("&");
