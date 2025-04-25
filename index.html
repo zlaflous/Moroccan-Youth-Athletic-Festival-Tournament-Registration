@@ -88,17 +88,17 @@
 
       fetch('https://script.google.com/macros/s/AKfycbxxtQnrbYjg06wBU30dmORSk3ef_bDZ-Qju5vaLJXx14vM80bNKFbsOo59GA_8do0Nw/exec', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(formData)
       })
       .then(response => response.json())
       .then(data => {
-        alert('Registration successful!');
-        form.reset();
+        console.log('Success:', data);
       })
-      .catch(error => {
+      .catch((error) => {
         console.error('Error:', error);
-        alert('There was an error submitting the form.');
       });
     });
   </script>
