@@ -5,6 +5,63 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
     />
+    <script>
+      function addParticipant() {
+        const container = document.getElementById("participants-container");
+        const index = container.children.length + 1;
+
+        const html = `
+        <div class="box mt-4">
+          <h3 class="title is-5">Participant \${index}</h3>
+          <div class="field">
+            <label class="label">First Name</label>
+            <div class="control">
+              <input class="input" type="text" name="Participant First Name \${index}" placeholder="First Name" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Last Name</label>
+            <div class="control">
+              <input class="input" type="text" name="Participant Last Name \${index}" placeholder="Last Name" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Date of Birth</label>
+            <div class="control">
+              <input class="input" type="date" name="Participant DOB \${index}" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Gender</label>
+            <div class="control">
+              <label class="radio">
+                <input type="radio" name="Gender \${index}" value="male" /> Male
+              </label>
+              <label class="radio">
+                <input type="radio" name="Gender \${index}" value="female" /> Female
+              </label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Soccer Level</label>
+            <div class="control">
+              <div class="select">
+                <select name="Soccer Level \${index}">
+                  <option value="recreational">Recreational</option>
+                  <option value="travel">Travel</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>`;
+
+        container.insertAdjacentHTML("beforeend", html);
+      }
+    </script>
   </head>
   <body>
     <section class="hero is-primary is-bold">
@@ -40,48 +97,10 @@
 
       <!-- Participant Info -->
       <h2 class="title is-4 mt-5">Participant Information</h2>
+      <div id="participants-container"></div>
       <div class="field">
-        <label class="label">First Name</label>
         <div class="control">
-          <input class="input" type="text" name="Participant First Name" placeholder="First Name" />
-        </div>
-      </div>
-
-      <div class="field">
-        <label class="label">Last Name</label>
-        <div class="control">
-          <input class="input" type="text" name="Participant Last Name" placeholder="Last Name" />
-        </div>
-      </div>
-
-      <div class="field">
-        <label class="label">Date of Birth</label>
-        <div class="control">
-          <input class="input" type="date" name="Participant DOB" />
-        </div>
-      </div>
-
-      <div class="field">
-        <label class="label">Gender</label>
-        <div class="control">
-          <label class="radio">
-            <input type="radio" name="Gender" value="male" /> Male
-          </label>
-          <label class="radio">
-            <input type="radio" name="Gender" value="female" /> Female
-          </label>
-        </div>
-      </div>
-
-      <div class="field">
-        <label class="label">Soccer Level</label>
-        <div class="control">
-          <div class="select">
-            <select name="Soccer Level">
-              <option value="recreational">Recreational</option>
-              <option value="travel">Travel</option>
-            </select>
-          </div>
+          <button class="button is-info" type="button" onclick="addParticipant()">Add Participant</button>
         </div>
       </div>
 
@@ -154,6 +173,7 @@ I, the parent or legal guardian of the participant, give permission for my child
             document.getElementById("message").style.color = "beige";
             document.getElementById("submit-button").disabled = false;
             document.getElementById("form").reset();
+            document.getElementById("participants-container").innerHTML = "";
 
             setTimeout(function () {
               document.getElementById("message").textContent = "";
