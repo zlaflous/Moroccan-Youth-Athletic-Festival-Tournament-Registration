@@ -204,18 +204,13 @@ formData = {
           generateQRCode();
 
           // Send data to Google Sheet
-          fetch("https://script.google.com/macros/s/AKfycbyZ4mFBI_6K5kZZTEfzNQnxeBjQaB9AjMLLB5lqetMDA6-F2H_531KhClv_xEVt4ZWy/exec", {
+          fetch("https://script.google.com/macros/s/AKfycbxwbFnfi_pZcduAxwOuYEtqiDkyIua6dViBBK6LNoem6MzzwaqWYOY_vLjWf8Eu1ICxpQ/exec", {
             method: "POST",
+            mode: "no-cors",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData)
-          })
-          .then(res => res.json())
-          .then(res => {
-            console.log("Google Sheet response:", res);
-          })
-          .catch(err => {
-            console.error("Error sending data to Google Sheet:", err);
           });
+
         });
       }
     }).render('#paypal-button-container'); */
