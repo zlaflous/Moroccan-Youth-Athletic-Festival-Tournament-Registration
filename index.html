@@ -10,68 +10,54 @@
     <section class="hero is-primary is-bold">
       <div class="hero-body">
         <div class="container">
-          <h1 class="title">Data Entry Form</h1>
+          <h1 class="title">Moroccan Youth Athletic Festival - Registration Form</h1>
         </div>
       </div>
     </section>
     <form id="form" class="container m-4 pl-4" method="POST">
+      <!-- Parent Info -->
+      <h2 class="title is-4 mt-5">Parent Information</h2>
       <div class="field">
-        <label class="label">Client Name</label>
+        <label class="label">Full Name</label>
         <div class="control">
-          <input
-            class="input"
-            type="text"
-            placeholder="Your Client Name"
-            name="Client Name"
-          />
+          <input class="input" type="text" name="Parent Full Name" placeholder="Full Name" />
         </div>
       </div>
-
-      <!-- <div class="field">
-        <label class="label">Last Name</label>
-        <div class="control">
-          <input
-            class="input"
-            type="text"
-            placeholder="Your Last Name"
-            name="Last Name"
-          />
-        </div>
-      </div> -->
 
       <div class="field">
         <label class="label">Email</label>
         <div class="control">
-          <input
-            class="input"
-            type="email"
-            placeholder="Your Email"
-            name="Email"
-          />
+          <input class="input" type="email" name="Parent Email" placeholder="Email Address" />
         </div>
       </div>
 
       <div class="field">
-        <label class="label">Password</label>
+        <label class="label">Phone Number</label>
         <div class="control">
-          <input
-            class="input"
-            type="password"
-            placeholder="Your Password"
-            name="Password"
-          />
+          <input class="input" type="tel" name="Parent Phone" placeholder="Phone Number" />
+        </div>
+      </div>
+
+      <!-- Participant Info -->
+      <h2 class="title is-4 mt-5">Participant Information</h2>
+      <div class="field">
+        <label class="label">First Name</label>
+        <div class="control">
+          <input class="input" type="text" name="Participant First Name" placeholder="First Name" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Last Name</label>
+        <div class="control">
+          <input class="input" type="text" name="Participant Last Name" placeholder="Last Name" />
         </div>
       </div>
 
       <div class="field">
         <label class="label">Date of Birth</label>
         <div class="control">
-          <input
-            class="input"
-            type="date"
-            placeholder="Your Date of Birth"
-            name="DOB"
-          />
+          <input class="input" type="date" name="Participant DOB" />
         </div>
       </div>
 
@@ -88,59 +74,56 @@
       </div>
 
       <div class="field">
-        <label class="label">Agree to Terms</label>
+        <label class="label">Soccer Level</label>
         <div class="control">
-          <label class="checkbox">
-            <input type="checkbox" name="Agree To Terms" value="yes" /> I agree
-            to the terms and conditions
-          </label>
+          <div class="select">
+            <select name="Soccer Level">
+              <option value="recreational">Recreational</option>
+              <option value="travel">Travel</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Waiver Section -->
+      <h2 class="title is-4 mt-5">Waiver & Consent</h2>
+      <div class="field">
+        <div class="control">
+          <textarea class="textarea" readonly>
+I, the parent or legal guardian of the participant, give permission for my child to take part in the Moroccan Youth Athletic Festival. I understand that participation in sports involves certain risks of injury and voluntarily assume all such risks. I release MASAR, event organizers, coaches, and volunteers from any liability for injuries or damages that may occur during the event. I authorize emergency medical treatment if needed and accept responsibility for any associated costs. I also give permission for my child’s photos or videos to be used for promotional purposes without compensation. I confirm my child is in good health and able to participate.
+          </textarea>
         </div>
       </div>
 
       <div class="field">
-        <label class="label">Additional Information</label>
         <div class="control">
-          <textarea
-            class="textarea"
-            placeholder="Any additional information"
-            name="Notes"
-          ></textarea>
+          <label class="checkbox">
+            <input type="checkbox" name="Waiver Consent" required /> I have read and agree to the above waiver.
+          </label>
         </div>
       </div>
 
+      <!-- Submit Buttons -->
       <div class="field is-grouped">
         <div class="control">
-          <button class="button is-primary" type="submit" id="submit-button">
-            Sign Up
-          </button>
+          <button class="button is-primary" type="submit" id="submit-button">Submit</button>
         </div>
         <div class="control">
-          <button class="button is-danger">Cancel</button>
+          <button class="button is-danger" type="reset">Cancel</button>
         </div>
       </div>
     </form>
-    <div
-      id="message"
-      style="
-        display: none;
-        margin: 20px;
-        font-weight: bold;
-        color: green;
-        padding: 8px;
-        background-color: beige;
-        border-radius: 4px;
-        border-color: aquamarine;
-      "
-    ></div>
 
+    <div id="message" style="display: none; margin: 20px; font-weight: bold; color: green; padding: 8px; background-color: beige; border-radius: 4px; border-color: aquamarine;"></div>
+
+    <!-- Script remains unchanged -->
     <script>
       document.getElementById("form").addEventListener("submit", function (e) {
-        e.preventDefault(); // Prevent the default form submission
+        e.preventDefault();
         document.getElementById("message").textContent = "Submitting..";
         document.getElementById("message").style.display = "block";
         document.getElementById("submit-button").disabled = true;
 
-        // Collect the form data
         var formData = new FormData(this);
         var keyValuePairs = [];
         for (var pair of formData.entries()) {
@@ -149,30 +132,23 @@
 
         var formDataString = keyValuePairs.join("&");
 
-        // Send a POST request to your Google Apps Script
-        fetch(
-          "https://script.google.com/macros/s/AKfycbxxtQnrbYjg06wBU30dmORSk3ef_bDZ-Qju5vaLJXx14vM80bNKFbsOo59GA_8do0Nw/exec",
-          {
-            redirect: "follow",
-            method: "POST",
-            body: formDataString,
-            headers: {
-              "Content-Type": "text/plain;charset=utf-8",
-            },
-          }
-        )
+        fetch("https://script.google.com/macros/s/AKfycbxxtQnrbYjg06wBU30dmORSk3ef_bDZ-Qju5vaLJXx14vM80bNKFbsOo59GA_8do0Nw/exec", {
+          redirect: "follow",
+          method: "POST",
+          body: formDataString,
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8",
+          },
+        })
           .then(function (response) {
-            // Check if the request was successful
             if (response) {
-              return response; // Assuming your script returns JSON response
+              return response;
             } else {
               throw new Error("Failed to submit the form.");
             }
           })
-          .then(function (data) {
-            // Display a success message
-            document.getElementById("message").textContent =
-              "Data submitted successfully!";
+          .then(function () {
+            document.getElementById("message").textContent = "Data submitted successfully!";
             document.getElementById("message").style.display = "block";
             document.getElementById("message").style.backgroundColor = "green";
             document.getElementById("message").style.color = "beige";
@@ -185,10 +161,8 @@
             }, 2600);
           })
           .catch(function (error) {
-            // Handle errors, you can display an error message here
             console.error(error);
-            document.getElementById("message").textContent =
-              "An error occurred while submitting the form.";
+            document.getElementById("message").textContent = "An error occurred while submitting the form.";
             document.getElementById("message").style.display = "block";
           });
       });
