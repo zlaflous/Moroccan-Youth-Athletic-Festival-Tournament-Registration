@@ -1,106 +1,197 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Registration Form</title>
-</head>
-<body>
-  <form id="registration-form">
-    <!-- Parent Information -->
-    <input type="text" id="parentName" placeholder="Parent Full Name" required>
-    <input type="email" id="parentEmail" placeholder="Parent Email" required>
-    <input type="text" id="parentPhone" placeholder="Parent Phone" required>
-
-    <!-- Participant Information -->
-    <div id="participants">
-      <div class="participant">
-        <input type="text" class="firstName" placeholder="First Name" required>
-        <input type="text" class="lastName" placeholder="Last Name" required>
-        <input type="text" class="dob" placeholder="DOB (MM/DD/YYYY)" required>
-        <select class="gender" required>
-          <option value="">Select Gender</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-        </select>
-        <select class="level" required>
-          <option value="">Select Soccer Level</option>
-          <option value="Recreational">Recreational</option>
-          <option value="Travel">Travel</option>
-        </select>
-      </div>
-    </div>
-
-    <button type="button" onclick="addParticipant()">Add Another Participant</button>
-    <button type="submit">Submit</button>
-  </form>
-
-  <script>
-    const form = document.getElementById('registration-form');
-    const participantsDiv = document.getElementById('participants');
-
-    function addParticipant() {
-      const participantHTML = `
-        <div class="participant">
-          <input type="text" class="firstName" placeholder="First Name" required>
-          <input type="text" class="lastName" placeholder="Last Name" required>
-          <input type="text" class="dob" placeholder="DOB (MM/DD/YYYY)" required>
-          <select class="gender" required>
-            <option value="">Select Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </select>
-          <select class="level" required>
-            <option value="">Select Soccer Level</option>
-            <option value="Recreational">Recreational</option>
-            <option value="Travel">Travel</option>
-          </select>
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
+  </head>
+  <body>
+    <section class="hero is-primary is-bold">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">Data Entry Form</h1>
         </div>
-      `;
-      participantsDiv.insertAdjacentHTML('beforeend', participantHTML);
-    }
+      </div>
+    </section>
+    <form id="form" class="container m-4 pl-4" method="POST">
+      <div class="field">
+        <label class="label">Client Name</label>
+        <div class="control">
+          <input
+            class="input"
+            type="text"
+            placeholder="Your Client Name"
+            name="Client Name"
+          />
+        </div>
+      </div>
 
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
+      <!-- <div class="field">
+        <label class="label">Last Name</label>
+        <div class="control">
+          <input
+            class="input"
+            type="text"
+            placeholder="Your Last Name"
+            name="Last Name"
+          />
+        </div>
+      </div> -->
 
-      const parentName = document.getElementById('parentName').value;
-      const parentEmail = document.getElementById('parentEmail').value;
-      const parentPhone = document.getElementById('parentPhone').value;
+      <div class="field">
+        <label class="label">Email</label>
+        <div class="control">
+          <input
+            class="input"
+            type="email"
+            placeholder="Your Email"
+            name="Email"
+          />
+        </div>
+      </div>
 
-      const participantElements = document.querySelectorAll('.participant');
-      const children = [];
+      <div class="field">
+        <label class="label">Password</label>
+        <div class="control">
+          <input
+            class="input"
+            type="password"
+            placeholder="Your Password"
+            name="Password"
+          />
+        </div>
+      </div>
 
-      participantElements.forEach(participant => {
-        const firstName = participant.querySelector('.firstName').value;
-        const lastName = participant.querySelector('.lastName').value;
-        const dob = participant.querySelector('.dob').value;
-        const gender = participant.querySelector('.gender').value;
-        const level = participant.querySelector('.level').value;
+      <div class="field">
+        <label class="label">Date of Birth</label>
+        <div class="control">
+          <input
+            class="input"
+            type="date"
+            placeholder="Your Date of Birth"
+            name="DOB"
+          />
+        </div>
+      </div>
 
-        children.push({ firstName, lastName, dob, gender, level });
+      <div class="field">
+        <label class="label">Gender</label>
+        <div class="control">
+          <label class="radio">
+            <input type="radio" name="Gender" value="male" /> Male
+          </label>
+          <label class="radio">
+            <input type="radio" name="Gender" value="female" /> Female
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Agree to Terms</label>
+        <div class="control">
+          <label class="checkbox">
+            <input type="checkbox" name="Agree To Terms" value="yes" /> I agree
+            to the terms and conditions
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Additional Information</label>
+        <div class="control">
+          <textarea
+            class="textarea"
+            placeholder="Any additional information"
+            name="Notes"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="field is-grouped">
+        <div class="control">
+          <button class="button is-primary" type="submit" id="submit-button">
+            Sign Up
+          </button>
+        </div>
+        <div class="control">
+          <button class="button is-danger">Cancel</button>
+        </div>
+      </div>
+    </form>
+    <div
+      id="message"
+      style="
+        display: none;
+        margin: 20px;
+        font-weight: bold;
+        color: green;
+        padding: 8px;
+        background-color: beige;
+        border-radius: 4px;
+        border-color: aquamarine;
+      "
+    ></div>
+
+    <script>
+      document.getElementById("form").addEventListener("submit", function (e) {
+        e.preventDefault(); // Prevent the default form submission
+        document.getElementById("message").textContent = "Submitting..";
+        document.getElementById("message").style.display = "block";
+        document.getElementById("submit-button").disabled = true;
+
+        // Collect the form data
+        var formData = new FormData(this);
+        var keyValuePairs = [];
+        for (var pair of formData.entries()) {
+          keyValuePairs.push(pair[0] + "=" + pair[1]);
+        }
+
+        var formDataString = keyValuePairs.join("&");
+
+        // Send a POST request to your Google Apps Script
+        fetch(
+          "https://script.google.com/macros/s/AKfycbz_aHKLvz6LO3NT9y9HS9FuIlQ8NZadn2fHcn66HBaT7nheUKF3jJ6eaUN9piFKiD4l/exec",
+          {
+            redirect: "follow",
+            method: "POST",
+            body: formDataString,
+            headers: {
+              "Content-Type": "text/plain;charset=utf-8",
+            },
+          }
+        )
+          .then(function (response) {
+            // Check if the request was successful
+            if (response) {
+              return response; // Assuming your script returns JSON response
+            } else {
+              throw new Error("Failed to submit the form.");
+            }
+          })
+          .then(function (data) {
+            // Display a success message
+            document.getElementById("message").textContent =
+              "Data submitted successfully!";
+            document.getElementById("message").style.display = "block";
+            document.getElementById("message").style.backgroundColor = "green";
+            document.getElementById("message").style.color = "beige";
+            document.getElementById("submit-button").disabled = false;
+            document.getElementById("form").reset();
+
+            setTimeout(function () {
+              document.getElementById("message").textContent = "";
+              document.getElementById("message").style.display = "none";
+            }, 2600);
+          })
+          .catch(function (error) {
+            // Handle errors, you can display an error message here
+            console.error(error);
+            document.getElementById("message").textContent =
+              "An error occurred while submitting the form.";
+            document.getElementById("message").style.display = "block";
+          });
       });
-
-      const formData = {
-        parentName,
-        parentEmail,
-        parentPhone,
-        children
-      };
-
-      fetch('https://script.google.com/macros/s/AKfycbxxtQnrbYjg06wBU30dmORSk3ef_bDZ-Qju5vaLJXx14vM80bNKFbsOo59GA_8do0Nw/exec', {
-              method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Success:', data);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
