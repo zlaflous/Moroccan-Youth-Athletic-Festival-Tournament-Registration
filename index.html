@@ -17,13 +17,13 @@
       function addParticipant() {
         const container = document.getElementById("participants-container");
         const index = container.children.length + 1;
-        const id = `participant-\${Date.now()}`;
+        const id = `participant-${Date.now()}`;
 
         const html = `
-        <div class="box mt-4" id="\${id}">
+        <div class="box mt-4" id="${id}">
           <div class="is-flex is-justify-content-space-between">
-            <h3 class="title is-5">Participant \${index}</h3>
-            <button class="delete" type="button" onclick="removeParticipant('\${id}')"></button>
+            <h3 class="title is-5">Participant ${index}</h3>
+            <button class="delete" type="button" onclick="removeParticipant('${id}')"></button>
           </div>
           <div class="field">
             <label class="label">First Name</label>
@@ -47,16 +47,16 @@
           </div>
 
           <div class="field">
-          <label class="label">Gender</label>
-          <div class="control">
-            <label class="radio">
-              <input type="radio" name="Gender[\${index-1}]" value="male" required /> Male
-            </label>
-            <label class="radio">
-              <input type="radio" name="Gender[\${index-1}]" value="female" /> Female
-            </label>
+            <label class="label">Gender</label>
+            <div class="control">
+              <label class="radio">
+                <input type="radio" name="Gender[${index-1}]" value="male" required /> Male
+              </label>
+              <label class="radio">
+                <input type="radio" name="Gender[${index-1}]" value="female" /> Female
+              </label>
+            </div>
           </div>
-        </div>
 
           <div class="field">
             <label class="label">Soccer Level</label>
@@ -164,7 +164,7 @@ I, the parent or legal guardian of the participant, give permission for my child
 
     <div id="message" style="display: none; margin: 20px; font-weight: bold; color: green; padding: 8px; background-color: beige; border-radius: 4px; border-color: aquamarine;"></div>
 
-    <!-- Script remains unchanged -->
+    <!-- Form Submission Script -->
     <script>
       document.getElementById("form").addEventListener("submit", function (e) {
         e.preventDefault();
