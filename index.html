@@ -1,10 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
-    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
     <style>
       .masar-logo {
         max-height: 1000px;
@@ -50,15 +47,15 @@
             <label class="label">Gender</label>
             <div class="control">
               <label class="radio">
-                <input type="radio" name="Gender[${index-1}]" value="male" required /> Male
+                <input type="radio" name="Gender[${index-1}]" value="male" required onchange="toggleSoccerLevel('${id}', true)" /> Male
               </label>
               <label class="radio">
-                <input type="radio" name="Gender[${index-1}]" value="female" /> Female
+                <input type="radio" name="Gender[${index-1}]" value="female" onchange="toggleSoccerLevel('${id}', false)" /> Female
               </label>
             </div>
           </div>
 
-          <div class="field">
+          <div class="field soccer-level" id="soccer-${id}">
             <label class="label">Soccer Level</label>
             <div class="control">
               <div class="select">
@@ -78,6 +75,13 @@
         const element = document.getElementById(id);
         if (element) {
           element.remove();
+        }
+      }
+
+      function toggleSoccerLevel(participantId, show) {
+        const el = document.getElementById(`soccer-${participantId}`);
+        if (el) {
+          el.style.display = show ? 'block' : 'none';
         }
       }
     </script>
@@ -100,7 +104,8 @@
         </div>
       </div>
     </section>
-    <form id="form" class="container m-4 pl-4" method="POST">
+    <!-- Remaining HTML unchanged -->
+	<form id="form" class="container m-4 pl-4" method="POST">
       <!-- Parent Info -->
       <h2 class="title is-4 mt-5">Parent Information</h2>
       <div class="field">
