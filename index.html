@@ -79,6 +79,10 @@ I, the parent or legal guardian of the participant, give permission for my child
       </div>
     </div>
 
+    <div id="total-due" class="notification is-info" style="display: none; font-weight: bold; margin-bottom: 20px;">
+      Total Due: $0
+    </div>
+
     <div id="proceed-container" class="field mt-5">
       <div class="control">
         <button class="button is-warning" type="button" onclick="startPayPal()">Proceed to Payment</button>
@@ -100,6 +104,18 @@ I, the parent or legal guardian of the participant, give permission for my child
   <div id="message" style="display: none; margin: 20px; font-weight: bold; color: green; padding: 8px; background-color: beige; border-radius: 4px;"></div>
 
   <script>
+    function updateTotalAmount() {
+      const participantCount = document.querySelectorAll('#participants-container .box').length;
+      const total = participantCount * 10;
+      const totalDueDiv = document.getElementById('total-due');
+      if (participantCount > 0) {
+        totalDueDiv.style.display = 'block';
+        totalDueDiv.textContent = `Total Due: $${total}`;
+      } else {
+        totalDueDiv.style.display = 'none';
+      }
+    }
+
     function addParticipant() {
       const container = document.getElementById("participants-container");
       const index = container.children.length + 1;
@@ -152,6 +168,7 @@ I, the parent or legal guardian of the participant, give permission for my child
           </div>
         </div>`;
       container.insertAdjacentHTML("beforeend", html);
+      updateTotalAmount();
     }
 
     function removeParticipant(id) {
@@ -159,6 +176,7 @@ I, the parent or legal guardian of the participant, give permission for my child
       if (element) {
         element.remove();
       }
+      updateTotalAmount();
     }
 
     function toggleSoccerLevel(participantId, show) {
@@ -172,6 +190,7 @@ I, the parent or legal guardian of the participant, give permission for my child
       const parentName = document.querySelector('input[name="Parent Full Name"]').value.trim();
       const parentEmail = document.querySelector('input[name="Parent Email"]').value.trim();
       const parentPhone = document.querySelector('input[name="Parent Phone"]').value.trim();
+      const waiverConsent = document.querySelector('input[name="Waiver Consent"]:checked');
 
       if (!parentName || !parentEmail || !parentPhone) {
         alert("Please complete all Parent Information fields before proceeding to payment.");
@@ -194,6 +213,11 @@ I, the parent or legal guardian of the participant, give permission for my child
           alert("Please fill out all fields for every participant before proceeding to payment.");
           return;
         }
+      }
+
+      if (!waiverConsent) {
+        alert("You must agree to the Waiver & Consent before proceeding to payment.");
+        return;
       }
 
       document.getElementById('proceed-container').style.display = 'none';
@@ -254,6 +278,7 @@ I, the parent or legal guardian of the participant, give permission for my child
         document.getElementById("submit-button").disabled = true;
         document.getElementById("form").reset();
         document.getElementById("participants-container").innerHTML = "";
+        updateTotalAmount();
       }).catch(function(error) {
         console.error(error);
         document.getElementById("message").textContent = "An error occurred while submitting the form.";
