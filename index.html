@@ -174,7 +174,7 @@ I, the parent or legal guardian of the participant, give permission for my child
       const parentPhone = document.querySelector('input[name="Parent Phone"]').value.trim();
 
       if (!parentName || !parentEmail || !parentPhone) {
-        alert("Please complete Parent Information before proceeding to payment.");
+        alert("Please complete all Parent Information fields before proceeding to payment.");
         return;
       }
 
@@ -182,6 +182,18 @@ I, the parent or legal guardian of the participant, give permission for my child
       if (participantBoxes.length === 0) {
         alert("Please add at least one participant before proceeding to payment.");
         return;
+      }
+
+      for (let box of participantBoxes) {
+        const firstName = box.querySelector('input[name="Participant First Name[]"]').value.trim();
+        const lastName = box.querySelector('input[name="Participant Last Name[]"]').value.trim();
+        const dob = box.querySelector('input[name="Participant DOB[]"]').value.trim();
+        const genderSelected = box.querySelector('input[name^="Gender"]:checked');
+
+        if (!firstName || !lastName || !dob || !genderSelected) {
+          alert("Please fill out all fields for every participant before proceeding to payment.");
+          return;
+        }
       }
 
       document.getElementById('proceed-container').style.display = 'none';
