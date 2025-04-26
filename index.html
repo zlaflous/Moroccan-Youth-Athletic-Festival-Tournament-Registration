@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Moroccan Youth Athletic Festival - Spring 2025 Registration</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-  <script src="AcD6KdrXGigfbBBDGPtlhLaKLp6S2ea7mR0kRuMYLp3_t7NFpiBMZPT4pGSzCtkgQRMvx2PsqF_ilvv6&currency=USD"></script>
+  <script src="https://www.paypal.com/sdk/js?client-id=AcD6KdrXGigfbBBDGPtlhLaKLp6S2ea7mR0kRuMYLp3_t7NFpiBMZPT4pGSzCtkgQRMvx2PsqF_ilvv6&currency=USD"></script>
   <style>
     .masar-logo {
       max-height: 120px;
@@ -15,6 +15,7 @@
     }
   </style>
 </head>
+
 <body>
   <section class="hero is-primary is-bold">
     <div class="hero-body">
@@ -39,19 +40,19 @@
     <div class="field">
       <label class="label">Full Name</label>
       <div class="control">
-        <input class="input" type="text" name="Parent Full Name" placeholder="Full Name" required>
+        <input class="input" type="text" name="Parent Full Name" required>
       </div>
     </div>
     <div class="field">
       <label class="label">Email</label>
       <div class="control">
-        <input class="input" type="email" name="Parent Email" placeholder="Email Address" required>
+        <input class="input" type="email" name="Parent Email" required>
       </div>
     </div>
     <div class="field">
       <label class="label">Phone Number</label>
       <div class="control">
-        <input class="input" type="tel" name="Parent Phone" placeholder="Phone Number" required>
+        <input class="input" type="tel" name="Parent Phone" required>
       </div>
     </div>
 
@@ -67,7 +68,7 @@
     <div class="field">
       <div class="control">
         <textarea class="textarea" readonly>
-I, the parent or legal guardian of the participant, give permission for my child to take part in the Moroccan Youth Athletic Festival. I understand that participation in sports involves certain risks of injury and voluntarily assume all such risks. I release MASAR, event organizers, coaches, and volunteers from any liability for injuries or damages that may occur during the event. I authorize emergency medical treatment if needed and accept responsibility for any associated costs. I also give permission for my child’s photos or videos to be used for promotional purposes without compensation. I confirm my child is in good health and able to participate.
+I, the parent or legal guardian of the participant, give permission for my child to take part in the Moroccan Youth Athletic Festival...
         </textarea>
       </div>
     </div>
@@ -79,7 +80,7 @@ I, the parent or legal guardian of the participant, give permission for my child
       </div>
     </div>
 
-    <div id="total-due" class="notification is-info" style="display: none; font-weight: bold; margin-bottom: 20px;">
+    <div id="total-due" class="notification is-info" style="display:none; font-weight:bold; margin-top:20px;">
       Total Due: $0
     </div>
 
@@ -89,7 +90,7 @@ I, the parent or legal guardian of the participant, give permission for my child
       </div>
     </div>
 
-    <div id="paypal-button-container" class="mt-4" style="display:none;"></div>
+    <div id="paypal-button-container" style="display:none;" class="mt-4"></div>
 
     <div class="field is-grouped mt-4">
       <div class="control">
@@ -101,31 +102,24 @@ I, the parent or legal guardian of the participant, give permission for my child
     </div>
   </form>
 
-  <div id="message" style="display: none; margin: 20px; font-weight: bold; color: green; padding: 8px; background-color: beige; border-radius: 4px;"></div>
-
   <script>
     function updateTotalAmount() {
       const participantCount = document.querySelectorAll('#participants-container .box').length;
-      const total = participantCount * 10;
       const totalDueDiv = document.getElementById('total-due');
       if (participantCount > 0) {
         totalDueDiv.style.display = 'block';
-        totalDueDiv.textContent = `Total Due: $${total}`;
+        totalDueDiv.textContent = `Total Due: $${participantCount * 10}`;
       } else {
         totalDueDiv.style.display = 'none';
       }
     }
 
     function addParticipant() {
-      const container = document.getElementById("participants-container");
+      const container = document.getElementById('participants-container');
       const index = container.children.length + 1;
       const id = `participant-${Date.now()}`;
-      const html = `
+      container.insertAdjacentHTML('beforeend', `
         <div class="box mt-4" id="${id}">
-          <div class="is-flex is-justify-content-space-between">
-            <h3 class="title is-5">Participant ${index}</h3>
-            <button class="delete" type="button" onclick="removeParticipant('${id}')"></button>
-          </div>
           <div class="field">
             <label class="label">First Name</label>
             <div class="control">
@@ -148,42 +142,15 @@ I, the parent or legal guardian of the participant, give permission for my child
             <label class="label">Gender</label>
             <div class="control">
               <label class="radio">
-                <input type="radio" name="Gender[${index-1}]" value="male" required onchange="toggleSoccerLevel('${id}', true)"> Male
+                <input type="radio" name="Gender[${index-1}]" value="male" required> Male
               </label>
               <label class="radio">
-                <input type="radio" name="Gender[${index-1}]" value="female" onchange="toggleSoccerLevel('${id}', false)"> Female
+                <input type="radio" name="Gender[${index-1}]" value="female"> Female
               </label>
             </div>
           </div>
-          <div class="field soccer-level" id="soccer-${id}">
-            <label class="label">Soccer Level</label>
-            <div class="control">
-              <div class="select">
-                <select name="Soccer Level[]">
-                  <option value="recreational">Recreational</option>
-                  <option value="travel">Travel</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>`;
-      container.insertAdjacentHTML("beforeend", html);
+        </div>`);
       updateTotalAmount();
-    }
-
-    function removeParticipant(id) {
-      const element = document.getElementById(id);
-      if (element) {
-        element.remove();
-      }
-      updateTotalAmount();
-    }
-
-    function toggleSoccerLevel(participantId, show) {
-      const el = document.getElementById(`soccer-${participantId}`);
-      if (el) {
-        el.style.display = show ? 'block' : 'none';
-      }
     }
 
     function startPayPal() {
@@ -237,53 +204,17 @@ I, the parent or legal guardian of the participant, give permission for my child
         },
         onApprove: function(data, actions) {
           return actions.order.capture().then(function(details) {
-            alert('Payment completed by ' + details.payer.name.given_name);
-            document.getElementById('submit-button').disabled = false;
+            document.getElementById('form').submit();
           });
         }
       }).render('#paypal-button-container');
     }
 
-    document.getElementById("form").addEventListener("submit", function(e) {
+    document.getElementById('form').addEventListener('submit', function(e) {
       e.preventDefault();
-      document.getElementById("message").textContent = "Submitting..";
-      document.getElementById("message").style.display = "block";
-
-      document.querySelectorAll('.soccer-level').forEach(el => {
-        if (el.style.display === 'none') {
-          const select = el.querySelector('select');
-          if (select) {
-            select.removeAttribute('name');
-          }
-        }
-      });
-
-      var formData = new FormData(this);
-      var keyValuePairs = [];
-      for (var pair of formData.entries()) {
-        keyValuePairs.push(pair[0] + "=" + encodeURIComponent(pair[1]));
-      }
-      var formDataString = keyValuePairs.join("&");
-
-      fetch("https://script.google.com/macros/s/AKfycbxxtQnrbYjg06wBU30dmORSk3ef_bDZ-Qju5vaLJXx14vM80bNKFbsOo59GA_8do0Nw/exec", {
-        method: "POST",
-        body: formDataString,
-        headers: {
-          "Content-Type": "text/plain;charset=utf-8",
-        }
-      }).then(function(response) {
-        document.getElementById("message").textContent = "Data submitted successfully!";
-        document.getElementById("message").style.backgroundColor = "green";
-        document.getElementById("message").style.color = "beige";
-        document.getElementById("submit-button").disabled = true;
-        document.getElementById("form").reset();
-        document.getElementById("participants-container").innerHTML = "";
-        updateTotalAmount();
-      }).catch(function(error) {
-        console.error(error);
-        document.getElementById("message").textContent = "An error occurred while submitting the form.";
-      });
+      window.location.href = "thank-you.html";
     });
   </script>
+
 </body>
 </html>
