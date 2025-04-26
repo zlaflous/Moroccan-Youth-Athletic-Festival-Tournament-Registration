@@ -177,6 +177,16 @@ I, the parent or legal guardian of the participant, give permission for my child
         document.getElementById("message").style.display = "block";
         document.getElementById("submit-button").disabled = true;
 
+	// 🛠️ Remove soccer level fields for girls (hidden dropdowns)
+	document.querySelectorAll('.soccer-level').forEach(el => {
+	  if (el.style.display === 'none') {
+	    const select = el.querySelector('select');
+	    if (select) {
+	      select.removeAttribute('name'); // prevent from being submitted
+	    }
+	  }
+	});
+
         var formData = new FormData(this);
         var keyValuePairs = [];
         for (var pair of formData.entries()) {
