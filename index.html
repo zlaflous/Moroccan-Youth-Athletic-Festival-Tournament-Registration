@@ -84,6 +84,7 @@ I, the parent or legal guardian of the participant, give permission for my child
         <button class="button is-warning" type="button" onclick="startPayPal()">Proceed to Payment</button>
       </div>
     </div>
+
     <div id="paypal-button-container" class="mt-4" style="display:none;"></div>
 
     <div class="field is-grouped mt-4">
@@ -168,12 +169,27 @@ I, the parent or legal guardian of the participant, give permission for my child
     }
 
     function startPayPal() {
+      const parentName = document.querySelector('input[name="Parent Full Name"]').value.trim();
+      const parentEmail = document.querySelector('input[name="Parent Email"]').value.trim();
+      const parentPhone = document.querySelector('input[name="Parent Phone"]').value.trim();
+
+      if (!parentName || !parentEmail || !parentPhone) {
+        alert("Please complete Parent Information before proceeding to payment.");
+        return;
+      }
+
+      const participantBoxes = document.querySelectorAll('#participants-container .box');
+      if (participantBoxes.length === 0) {
+        alert("Please add at least one participant before proceeding to payment.");
+        return;
+      }
+
       document.getElementById('proceed-container').style.display = 'none';
       document.getElementById('paypal-button-container').style.display = 'block';
 
       paypal.Buttons({
         createOrder: function(data, actions) {
-          const participantCount = document.querySelectorAll('#participants-container .box').length;
+          const participantCount = participantBoxes.length;
           const totalAmount = participantCount * 10 || 10;
           return actions.order.create({
             purchase_units: [{
