@@ -91,15 +91,6 @@ I, the parent or legal guardian of the participant, give permission for my child
   </div>
 
   <div id="paypal-button-container" style="display:none;" class="mt-4"></div>
-
-  <div class="field is-grouped mt-4">
-    <div class="control">
-      <button class="button is-primary" type="submit" id="submit-button" disabled>Submit</button>
-    </div>
-    <div class="control">
-      <button class="button is-danger" type="reset">Cancel</button>
-    </div>
-  </div>
 </form>
 
 <script>
@@ -120,6 +111,10 @@ function addParticipant() {
   const index = container.children.length;
   container.insertAdjacentHTML('beforeend', `
     <div class="box mt-4" id="${id}">
+      <div class="is-flex is-justify-content-space-between is-align-items-center mb-3">
+        <h3 class="title is-5">Participant ${index + 1}</h3>
+        <button type="button" class="delete" onclick="removeParticipant('${id}')"></button>
+      </div>
       <div class="field">
         <label class="label">First Name</label>
         <div class="control">
@@ -162,6 +157,14 @@ function addParticipant() {
       </div>
     </div>
   `);
+  updateTotalAmount();
+}
+
+function removeParticipant(id) {
+  const box = document.getElementById(id);
+  if (box) {
+    box.remove();
+  }
   updateTotalAmount();
 }
 
