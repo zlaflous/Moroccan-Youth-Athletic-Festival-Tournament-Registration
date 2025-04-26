@@ -1,6 +1,5 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +7,15 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <script src="https://www.paypal.com/sdk/js?client-id=ASNXc-c_Ozu9IRC4ILp5oC6VOLz18amVlbYfVnKYA2kvJIBlQnoLUPP-Rdz4J_vyMD5toHUwg-OQH-OX&currency=USD"></script>
   <style>
-    .masar-logo { max-height: 120px; background-color: #00c4cc; border-radius: 8px; padding: 4px; }
+    .masar-logo {
+      max-height: 120px;
+      background-color: #00c4cc;
+      border-radius: 8px;
+      padding: 4px;
+    }
   </style>
 </head>
 <body>
-  <!-- HERO SECTION -->
   <section class="hero is-primary is-bold">
     <div class="hero-body">
       <div class="container">
@@ -32,28 +35,26 @@
   </section>
 
   <form id="form" class="container m-4 pl-4" method="POST">
-    <!-- Parent Info -->
     <h2 class="title is-4 mt-5">Parent Information</h2>
     <div class="field">
       <label class="label">Full Name</label>
       <div class="control">
-        <input class="input" type="text" name="Parent Full Name" required>
+        <input class="input" type="text" name="Parent Full Name" placeholder="Full Name" required>
       </div>
     </div>
     <div class="field">
       <label class="label">Email</label>
       <div class="control">
-        <input class="input" type="email" name="Parent Email" required>
+        <input class="input" type="email" name="Parent Email" placeholder="Email Address" required>
       </div>
     </div>
     <div class="field">
       <label class="label">Phone Number</label>
       <div class="control">
-        <input class="input" type="tel" name="Parent Phone" required>
+        <input class="input" type="tel" name="Parent Phone" placeholder="Phone Number" required>
       </div>
     </div>
 
-    <!-- Participant Info -->
     <h2 class="title is-4 mt-5">Participant Information</h2>
     <div id="participants-container"></div>
     <div class="field">
@@ -62,29 +63,33 @@
       </div>
     </div>
 
-    <!-- Waiver Section -->
     <h2 class="title is-4 mt-5">Waiver & Consent</h2>
     <div class="field">
       <div class="control">
-        <textarea class="textarea" readonly>I, the parent or legal guardian of the participant, give permission for my child to take part...</textarea>
+        <textarea class="textarea" readonly>
+I, the parent or legal guardian of the participant, give permission for my child to take part in the Moroccan Youth Athletic Festival. I understand that participation in sports involves certain risks of injury and voluntarily assume all such risks. I release MASAR, event organizers, coaches, and volunteers from any liability for injuries or damages that may occur during the event. I authorize emergency medical treatment if needed and accept responsibility for any associated costs. I also give permission for my child’s photos or videos to be used for promotional purposes without compensation. I confirm my child is in good health and able to participate.
+        </textarea>
       </div>
     </div>
     <div class="field">
       <div class="control">
         <label class="checkbox">
-          <input type="checkbox" name="Waiver Consent" required> I agree to the Waiver & Consent.
+          <input type="checkbox" name="Waiver Consent" required> I have read and agree to the above waiver.
         </label>
       </div>
     </div>
 
-    <!-- Payment Section -->
-    <div id="total-due" class="notification is-info" style="display: none; font-weight: bold;"></div>
+    <div id="total-due" class="notification is-info" style="display: none; font-weight: bold; margin-bottom: 20px;">
+      Total Due: $0
+    </div>
+
     <div id="proceed-container" class="field mt-5">
       <div class="control">
         <button class="button is-warning" type="button" onclick="startPayPal()">Proceed to Payment</button>
       </div>
     </div>
-    <div id="paypal-button-container" style="display:none;" class="mt-4"></div>
+
+    <div id="paypal-button-container" class="mt-4" style="display:none;"></div>
 
     <div class="field is-grouped mt-4">
       <div class="control">
@@ -96,46 +101,122 @@
     </div>
   </form>
 
+  <div id="message" style="display: none; margin: 20px; font-weight: bold; color: green; padding: 8px; background-color: beige; border-radius: 4px;"></div>
+
   <script>
     function updateTotalAmount() {
       const participantCount = document.querySelectorAll('#participants-container .box').length;
+      const total = participantCount * 10;
       const totalDueDiv = document.getElementById('total-due');
       if (participantCount > 0) {
         totalDueDiv.style.display = 'block';
-        totalDueDiv.textContent = `Total Due: $${participantCount * 10}`;
+        totalDueDiv.textContent = `Total Due: $${total}`;
       } else {
         totalDueDiv.style.display = 'none';
       }
     }
+
     function addParticipant() {
-      const container = document.getElementById('participants-container');
+      const container = document.getElementById("participants-container");
+      const index = container.children.length + 1;
       const id = `participant-${Date.now()}`;
-      container.insertAdjacentHTML('beforeend', `
+      const html = `
         <div class="box mt-4" id="${id}">
-          <h3 class="title is-5">Participant</h3>
-          <div class="field"><input class="input" type="text" name="Participant First Name[]" placeholder="First Name" required></div>
-          <div class="field"><input class="input" type="text" name="Participant Last Name[]" placeholder="Last Name" required></div>
-          <div class="field"><input class="input" type="date" name="Participant DOB[]" required></div>
-          <div class="field">
-            <label class="radio"><input type="radio" name="Gender[${container.children.length}]" value="male" required> Male</label>
-            <label class="radio"><input type="radio" name="Gender[${container.children.length}]" value="female"> Female</label>
+          <div class="is-flex is-justify-content-space-between">
+            <h3 class="title is-5">Participant ${index}</h3>
+            <button class="delete" type="button" onclick="removeParticipant('${id}')"></button>
           </div>
-        </div>`);
+          <div class="field">
+            <label class="label">First Name</label>
+            <div class="control">
+              <input class="input" type="text" name="Participant First Name[]" required>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Last Name</label>
+            <div class="control">
+              <input class="input" type="text" name="Participant Last Name[]" required>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Date of Birth</label>
+            <div class="control">
+              <input class="input" type="date" name="Participant DOB[]" required>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Gender</label>
+            <div class="control">
+              <label class="radio">
+                <input type="radio" name="Gender[${index-1}]" value="male" required onchange="toggleSoccerLevel('${id}', true)"> Male
+              </label>
+              <label class="radio">
+                <input type="radio" name="Gender[${index-1}]" value="female" onchange="toggleSoccerLevel('${id}', false)"> Female
+              </label>
+            </div>
+          </div>
+          <div class="field soccer-level" id="soccer-${id}">
+            <label class="label">Soccer Level</label>
+            <div class="control">
+              <div class="select">
+                <select name="Soccer Level[]">
+                  <option value="recreational">Recreational</option>
+                  <option value="travel">Travel</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>`;
+      container.insertAdjacentHTML("beforeend", html);
       updateTotalAmount();
     }
+
+    function removeParticipant(id) {
+      const element = document.getElementById(id);
+      if (element) {
+        element.remove();
+      }
+      updateTotalAmount();
+    }
+
+    function toggleSoccerLevel(participantId, show) {
+      const el = document.getElementById(`soccer-${participantId}`);
+      if (el) {
+        el.style.display = show ? 'block' : 'none';
+      }
+    }
+
     function startPayPal() {
       const parentName = document.querySelector('input[name="Parent Full Name"]').value.trim();
       const parentEmail = document.querySelector('input[name="Parent Email"]').value.trim();
       const parentPhone = document.querySelector('input[name="Parent Phone"]').value.trim();
       const waiverConsent = document.querySelector('input[name="Waiver Consent"]:checked');
 
-      if (!parentName || !parentEmail || !parentPhone || !waiverConsent) {
-        alert('Please complete all fields and agree to the waiver before payment.');
+      if (!parentName || !parentEmail || !parentPhone) {
+        alert("Please complete all Parent Information fields before proceeding to payment.");
         return;
       }
+
       const participantBoxes = document.querySelectorAll('#participants-container .box');
       if (participantBoxes.length === 0) {
-        alert('Please add at least one participant.');
+        alert("Please add at least one participant before proceeding to payment.");
+        return;
+      }
+
+      for (let box of participantBoxes) {
+        const firstName = box.querySelector('input[name="Participant First Name[]"]').value.trim();
+        const lastName = box.querySelector('input[name="Participant Last Name[]"]').value.trim();
+        const dob = box.querySelector('input[name="Participant DOB[]"]').value.trim();
+        const genderSelected = box.querySelector('input[name^="Gender"]:checked');
+
+        if (!firstName || !lastName || !dob || !genderSelected) {
+          alert("Please fill out all fields for every participant before proceeding to payment.");
+          return;
+        }
+      }
+
+      if (!waiverConsent) {
+        alert("You must agree to the Waiver & Consent before proceeding to payment.");
         return;
       }
 
@@ -144,8 +225,15 @@
 
       paypal.Buttons({
         createOrder: function(data, actions) {
-          const totalAmount = participantBoxes.length * 10;
-          return actions.order.create({ purchase_units: [{ amount: { value: totalAmount.toFixed(2) } }] });
+          const participantCount = participantBoxes.length;
+          const totalAmount = participantCount * 10 || 10;
+          return actions.order.create({
+            purchase_units: [{
+              amount: {
+                value: totalAmount.toFixed(2)
+              }
+            }]
+          });
         },
         onApprove: function(data, actions) {
           return actions.order.capture().then(function(details) {
@@ -155,9 +243,46 @@
         }
       }).render('#paypal-button-container');
     }
-    document.getElementById('form').addEventListener('submit', function(e) {
+
+    document.getElementById("form").addEventListener("submit", function(e) {
       e.preventDefault();
-      window.location.href = "thank-you.html";
+      document.getElementById("message").textContent = "Submitting..";
+      document.getElementById("message").style.display = "block";
+
+      document.querySelectorAll('.soccer-level').forEach(el => {
+        if (el.style.display === 'none') {
+          const select = el.querySelector('select');
+          if (select) {
+            select.removeAttribute('name');
+          }
+        }
+      });
+
+      var formData = new FormData(this);
+      var keyValuePairs = [];
+      for (var pair of formData.entries()) {
+        keyValuePairs.push(pair[0] + "=" + encodeURIComponent(pair[1]));
+      }
+      var formDataString = keyValuePairs.join("&");
+
+      fetch("https://script.google.com/macros/s/AKfycbxxtQnrbYjg06wBU30dmORSk3ef_bDZ-Qju5vaLJXx14vM80bNKFbsOo59GA_8do0Nw/exec", {
+        method: "POST",
+        body: formDataString,
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8",
+        }
+      }).then(function(response) {
+        document.getElementById("message").textContent = "Data submitted successfully!";
+        document.getElementById("message").style.backgroundColor = "green";
+        document.getElementById("message").style.color = "beige";
+        document.getElementById("submit-button").disabled = true;
+        document.getElementById("form").reset();
+        document.getElementById("participants-container").innerHTML = "";
+        updateTotalAmount();
+      }).catch(function(error) {
+        console.error(error);
+        document.getElementById("message").textContent = "An error occurred while submitting the form.";
+      });
     });
   </script>
 </body>
