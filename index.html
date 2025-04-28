@@ -15,6 +15,7 @@
     }
   </style>
 </head>
+
 <body>
 <section class="hero is-primary is-bold">
   <div class="hero-body">
@@ -33,17 +34,27 @@
     </div>
   </div>
 </section>
+
 <form id="form" class="container m-4 pl-4" method="POST">
   <h2 class="title is-4 mt-5">Parent Information</h2>
   <div class="field"><label class="label">Full Name</label><div class="control"><input class="input" type="text" name="Parent Full Name" required></div></div>
   <div class="field"><label class="label">Email</label><div class="control"><input class="input" type="email" name="Parent Email" required></div></div>
   <div class="field"><label class="label">Phone Number</label><div class="control"><input class="input" type="tel" name="Parent Phone" required></div></div>
+
   <h2 class="title is-4 mt-5">Participant Information</h2>
   <div id="participants-container"></div>
   <div class="field"><div class="control"><button class="button is-info" type="button" onclick="addParticipant()">Add Participant</button></div></div>
+
   <h2 class="title is-4 mt-5">Waiver & Consent</h2>
-  <div class="field"><div class="control"><textarea class="textarea" readonly>I, the parent or legal guardian of the participant, give permission...</textarea></div></div>
+  <div class="field">
+    <div class="control">
+      <textarea class="textarea" readonly>
+I, the parent or legal guardian of the participant, give permission for my child to take part in the Moroccan Youth Athletic Festival. I understand that participation in sports involves certain risks of injury and voluntarily assume all such risks. I release MASAR, event organizers, coaches, and volunteers from any liability for injuries or damages that may occur during the event. I authorize emergency medical treatment if needed and accept responsibility for any associated costs. I also give permission for my child’s photos or videos to be used for promotional purposes without compensation. I confirm my child is in good health and able to participate.
+      </textarea>
+    </div>
+  </div>
   <div class="field"><div class="control"><label class="checkbox"><input type="checkbox" name="Waiver Consent" required> I have read and agree to the above waiver.</label></div></div>
+
   <div id="total-due" class="notification is-info" style="display:none; font-weight:bold; margin-top:20px;">Total Due: $0</div>
   <div id="proceed-container" class="field mt-5"><div class="control"><button class="button is-warning" type="button" onclick="startPayPal()">Proceed to Payment</button></div></div>
   <div id="paypal-button-container" style="display:none;" class="mt-4"></div>
@@ -64,10 +75,11 @@ function updateTotalAmount() {
 function addParticipant() {
   const container = document.getElementById('participants-container');
   const id = `participant-${Date.now()}`;
+  const index = container.children.length;
   container.insertAdjacentHTML('beforeend', `
     <div class="box mt-4" id="${id}">
       <div class="is-flex is-justify-content-space-between is-align-items-center mb-3">
-        <h3 class="title is-5">Participant ${container.children.length + 1}</h3>
+        <h3 class="title is-5">Participant ${index + 1}</h3>
         <button type="button" class="delete" onclick="removeParticipant('${id}')"></button>
       </div>
       <div class="field"><label class="label">First Name</label><div class="control"><input class="input" type="text" name="Participant First Name[]" required></div></div>
@@ -76,17 +88,13 @@ function addParticipant() {
       <div class="field">
         <label class="label">Gender</label>
         <div class="control">
-          <label class="radio"><input type="radio" name="Gender[]" value="boy" required onchange="toggleSoccerLevel('${id}', true)"> Boy (Soccer)</label>
-          <label class="radio"><input type="radio" name="Gender[]" value="girl" onchange="toggleSoccerLevel('${id}', false)"> Girl (Race)</label>
+          <label class="radio"><input type="radio" name="Gender-${index}" value="boy" required onchange="toggleSoccerLevel('${id}', true)"> Boy (Soccer)</label>
+          <label class="radio"><input type="radio" name="Gender-${index}" value="girl" onchange="toggleSoccerLevel('${id}', false)"> Girl (Race)</label>
         </div>
       </div>
       <div class="field soccer-level" id="soccer-${id}">
         <label class="label">Soccer Level</label>
-        <div class="control">
-          <div class="select">
-            <select name="Soccer Level[]"><option value="recreational">Recreational</option><option value="travel">Travel</option></select>
-          </div>
-        </div>
+        <div class="control"><div class="select"><select name="Soccer Level[]"><option value="recreational">Recreational</option><option value="travel">Travel</option></select></div></div>
       </div>
     </div>
   `);
@@ -128,7 +136,7 @@ function startPayPal() {
     const firstName = box.querySelector('input[name="Participant First Name[]"]').value.trim();
     const lastName = box.querySelector('input[name="Participant Last Name[]"]').value.trim();
     const dob = box.querySelector('input[name="Participant DOB[]"]').value.trim();
-    const genderSelected = box.querySelector('input[name^="Gender"]:checked');
+    const genderSelected = box.querySelector('input[type="radio"]:checked');
     if (!firstName || !lastName || !dob || !genderSelected) {
       alert("Please fill out all fields for every participant.");
       return;
@@ -172,5 +180,6 @@ function sendFormData() {
   });
 }
 </script>
+
 </body>
 </html>
