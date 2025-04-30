@@ -13,11 +13,6 @@
       border-radius: 8px;
       padding: 4px;
     }
-    .participant-box {
-      border-left: 3px solid #00c4cc;
-      padding-left: 10px;
-      margin-bottom: 15px;
-    }
   </style>
 </head>
 
@@ -54,7 +49,7 @@
   <div class="field">
     <div class="control">
       <textarea class="textarea" readonly>
-I, the parent or legal guardian of the participant, give permission for my child to take part in the Moroccan Youth Athletic Festival...
+I, the parent or legal guardian of the participant, give permission for my child to take part in the Moroccan Youth Athletic Festival. I understand that participation in sports involves certain risks of injury and voluntarily assume all such risks. I release MASAR, event organizers, coaches, and volunteers from any liability for injuries or damages that may occur during the event. I authorize emergency medical treatment if needed and accept responsibility for any associated costs. I also give permission for my child’s photos or videos to be used for promotional purposes without compensation. I confirm my child is in good health and able to participate.
       </textarea>
     </div>
   </div>
@@ -82,7 +77,7 @@ function addParticipant() {
   const id = `participant-${Date.now()}`;
   const index = container.children.length;
   container.insertAdjacentHTML('beforeend', `
-    <div class="box participant-box" id="${id}">
+    <div class="box mt-4" id="${id}">
       <div class="is-flex is-justify-content-space-between is-align-items-center mb-3">
         <h3 class="title is-5">Participant ${index + 1}</h3>
         <button type="button" class="delete" onclick="removeParticipant('${id}')"></button>
@@ -93,8 +88,8 @@ function addParticipant() {
       <div class="field">
         <label class="label">Gender</label>
         <div class="control">
-          <label class="radio"><input type="radio" name="Gender[]" value="boy" required onchange="toggleSoccerLevel('${id}', true)"> Boy (Soccer)</label>
-          <label class="radio"><input type="radio" name="Gender[]" value="girl" onchange="toggleSoccerLevel('${id}', false)"> Girl (Race)</label>
+          <label class="radio"><input type="radio" name="Participant Gender[${index}]" value="boy" required onchange="toggleSoccerLevel('${id}', true)"> Boy (Soccer)</label>
+          <label class="radio"><input type="radio" name="Participant Gender[${index}]" value="girl" onchange="toggleSoccerLevel('${id}', false)"> Girl (Race)</label>
         </div>
       </div>
       <div class="field soccer-level" id="soccer-${id}">
@@ -168,37 +163,23 @@ function startPayPal() {
 function sendFormData() {
   const form = document.getElementById('form');
   const formData = new FormData(form);
-  
-  // Convert FormData to object with arrays for repeated fields
-  const formDataObj = {};
-  formData.forEach((value, key) => {
-    if (key.endsWith('[]')) {
-      const cleanKey = key.replace('[]', '');
-      if (!formDataObj[cleanKey]) formDataObj[cleanKey] = [];
-      formDataObj[cleanKey].push(value);
-    } else {
-      formDataObj[key] = value;
-    }
+
+  // Fix: Manually add gender fields as array
+  const genderInputs = document.querySelectorAll('input[type="radio"][name^="Participant Gender"]:checked');
+  genderInputs.forEach(radio => {
+    formData.append("Participant Gender[]", radio.value);
   });
 
-  // Convert to URL-encoded string
   const keyValuePairs = [];
-  for (const key in formDataObj) {
-    if (Array.isArray(formDataObj[key])) {
-      formDataObj[key].forEach(val => {
-        keyValuePairs.push(`${encodeURIComponent(key)}=${encodeURIComponent(val)}`);
-      });
-    } else {
-      keyValuePairs.push(`${encodeURIComponent(key)}=${encodeURIComponent(formDataObj[key])}`);
-    }
+  for (let pair of formData.entries()) {
+    keyValuePairs.push(`${pair[0]}=${encodeURIComponent(pair[1])}`);
   }
+  const formDataString = keyValuePairs.join("&");
 
   fetch("https://script.google.com/macros/s/AKfycbxxtQnrbYjg06wBU30dmORSk3ef_bDZ-Qju5vaLJXx14vM80bNKFbsOo59GA_8do0Nw/exec", {
     method: "POST",
-    body: keyValuePairs.join("&"),
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    }
+    body: formDataString,
+    headers: {"Content-Type": "text/plain;charset=utf-8"}
   }).then(response => {
     window.location.href = "thank-you.html";
   }).catch(error => {
