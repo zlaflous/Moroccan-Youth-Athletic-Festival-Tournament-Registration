@@ -160,15 +160,49 @@ function startPayPal() {
 function sendFormData() {
   const form = document.getElementById('form');
   const formData = new FormData(form);
+  
+  // Convert FormData to object with arrays for repeated fields
+  const formDataObj = {};
+  formData.forEach((value, key) => {
+    if (key.endsWith('[]')) {
+      const cleanKey = key.replace('[]', '');
+      if (!formDataObj[cleanKey]) formDataObj[cleanKey] = [];
+      formDataObj[cleanKey].push(value);
+    } else {
+      formDataObj[key] = value;
+    }
+  });
+
+  // Handle radio buttons (Gender)
+  const participantBoxes = document.querySelectorAll('#participants-container .box');
+  formDataObj["Gender"] = [];
+  participantBoxes.forEach(box => {
+    const genderSelected = box.querySelector('input[type="radio"]:checked');
+    if (genderSelected) {
+      formDataObj["Gender"].push(genderSelected.value);
+    }
+  });
+
+  // Convert to URL-encoded string
   const keyValuePairs = [];
-  for (let pair of formData.entries()) {
-    keyValuePairs.push(`${pair[0]}=${encodeURIComponent(pair[1])}`);
+  for (const key in formDataObj) {
+    if (Array.isArray(formDataObj[key])) {
+      formDataObj[key].forEach(val => {
+        keyValuePairs.push(`${encodeURIComponent(key)}=${encodeURIComponent(val)}`);
+      });
+    } else {
+      keyValuePairs.push(`${encodeURIComponent(key)}=${encodeURIComponent(formDataObj[key])}`);
+    }
   }
+
   const formDataString = keyValuePairs.join("&");
+  
   fetch("https://script.google.com/macros/s/AKfycbxxtQnrbYjg06wBU30dmORSk3ef_bDZ-Qju5vaLJXx14vM80bNKFbsOo59GA_8do0Nw/exec", {
     method: "POST",
     body: formDataString,
-    headers: {"Content-Type": "text/plain;charset=utf-8"}
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    }
   }).then(response => {
     window.location.href = "thank-you.html";
   }).catch(error => {
