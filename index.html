@@ -78,24 +78,21 @@ function addParticipant() {
   const index = container.children.length;
   container.insertAdjacentHTML('beforeend', `
     <div class="box mt-4" id="${id}">
-      <div class="is-flex is-justify-content-space-between is-align-items-center mb-3">
-        <h3 class="title is-5">Participant ${index + 1}</h3>
-        <button type="button" class="delete" onclick="removeParticipant('${id}')"></button>
-      </div>
-      <div class="field"><label class="label">First Name</label><div class="control"><input class="input" type="text" name="Participant First Name[]" required></div></div>
-      <div class="field"><label class="label">Last Name</label><div class="control"><input class="input" type="text" name="Participant Last Name[]" required></div></div>
-      <div class="field"><label class="label">Date of Birth</label><div class="control"><input class="input" type="date" name="Participant DOB[]" required></div></div>
+      <!-- ... other fields ... -->
       <div class="field">
         <label class="label">Gender</label>
         <div class="control">
-          <label class="radio"><input type="radio" name="Gender-${index}" value="boy" required onchange="toggleSoccerLevel('${id}', true)"> Boy (Soccer)</label>
-          <label class="radio"><input type="radio" name="Gender-${index}" value="girl" onchange="toggleSoccerLevel('${id}', false)"> Girl (Race)</label>
+          <label class="radio">
+            <input type="radio" name="Gender[]" value="boy" required onchange="toggleSoccerLevel('${id}', true)">
+            Boy (Soccer)
+          </label>
+          <label class="radio">
+            <input type="radio" name="Gender[]" value="girl" onchange="toggleSoccerLevel('${id}', false)">
+            Girl (Race)
+          </label>
         </div>
       </div>
-      <div class="field soccer-level" id="soccer-${id}">
-        <label class="label">Soccer Level</label>
-        <div class="control"><div class="select"><select name="Soccer Level[]"><option value="recreational">Recreational</option><option value="travel">Travel</option></select></div></div>
-      </div>
+      <!-- ... rest of participant fields ... -->
     </div>
   `);
   updateTotalAmount();
