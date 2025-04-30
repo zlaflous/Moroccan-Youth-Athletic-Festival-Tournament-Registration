@@ -9,9 +9,43 @@
   <style>
     .masar-logo {
       max-height: 120px;
-      background-color: #00c4cc;
       border-radius: 8px;
       padding: 4px;
+    }
+    .hero {
+      background: linear-gradient(135deg, #00c4cc 0%, #0077cc 100%);
+    }
+    .form-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem;
+      box-shadow: 0 0.5em 1em -0.125em rgba(10,10,10,.1), 0 0 0 1px rgba(10,10,10,.02);
+      border-radius: 8px;
+      background: white;
+    }
+    body {
+      background-color: #f5f5f5;
+    }
+    .section-title {
+      border-bottom: 2px solid #00c4cc;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+      color: #363636;
+    }
+    .participant-box {
+      border-left: 4px solid #00c4cc;
+      padding-left: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .radio {
+      margin-right: 1rem;
+    }
+    .button.is-warning {
+      background-color: #ffdd57;
+      color: rgba(0,0,0,.7);
+    }
+    .button.is-warning:hover {
+      background-color: #ffd83d;
     }
   </style>
 </head>
@@ -27,7 +61,10 @@
         </div>
         <div class="column is-narrow">
           <figure class="image is-128x128">
-            <img src="https://github.com/zlaflous/Moroccan-Youth-Athletic-Festival-Tournament-Registration/blob/main/MASAR_Logo_Transparent%20(1).png?raw=true" alt="MASAR Logo" class="masar-logo">
+            <img src="https://github.com/zlaflous/Moroccan-Youth-Athletic-Festival-Tournament-Registration/blob/main/MASAR_Logo_Transparent%20(1).png?raw=true" 
+                 alt="MASAR Logo" 
+                 class="masar-logo"
+                 style="background-color: transparent;">
           </figure>
         </div>
       </div>
@@ -35,30 +72,78 @@
   </div>
 </section>
 
-<form id="form" class="container m-4 pl-4" method="POST">
-  <h2 class="title is-4 mt-5">Parent Information</h2>
-  <div class="field"><label class="label">Full Name</label><div class="control"><input class="input" type="text" name="Parent Full Name" required></div></div>
-  <div class="field"><label class="label">Email</label><div class="control"><input class="input" type="email" name="Parent Email" required></div></div>
-  <div class="field"><label class="label">Phone Number</label><div class="control"><input class="input" type="tel" name="Parent Phone" required></div></div>
+<div class="section">
+  <div class="form-container">
+    <form id="form" method="POST">
+      <h2 class="title is-4 section-title">Parent Information</h2>
+      <div class="field">
+        <label class="label">Full Name</label>
+        <div class="control">
+          <input class="input" type="text" name="Parent Full Name" required>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Email</label>
+        <div class="control">
+          <input class="input" type="email" name="Parent Email" required>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Phone Number</label>
+        <div class="control">
+          <input class="input" type="tel" name="Parent Phone" required>
+        </div>
+      </div>
 
-  <h2 class="title is-4 mt-5">Participant Information</h2>
-  <div id="participants-container"></div>
-  <div class="field"><div class="control"><button class="button is-info" type="button" onclick="addParticipant()">Add Participant</button></div></div>
+      <h2 class="title is-4 section-title mt-6">Participant Information</h2>
+      <div id="participants-container"></div>
+      <div class="field">
+        <div class="control">
+          <button class="button is-info" type="button" onclick="addParticipant()">
+            <span class="icon">
+              <i class="fas fa-plus"></i>
+            </span>
+            <span>Add Participant</span>
+          </button>
+        </div>
+      </div>
 
-  <h2 class="title is-4 mt-5">Waiver & Consent</h2>
-  <div class="field">
-    <div class="control">
-      <textarea class="textarea" readonly>
-I, the parent or legal guardian of the participant, give permission for my child to take part in the Moroccan Youth Athletic Festival. I understand that participation in sports involves certain risks of injury and voluntarily assume all such risks. I release MASAR, event organizers, coaches, and volunteers from any liability for injuries or damages that may occur during the event. I authorize emergency medical treatment if needed and accept responsibility for any associated costs. I also give permission for my child’s photos or videos to be used for promotional purposes without compensation. I confirm my child is in good health and able to participate.
-      </textarea>
-    </div>
+      <h2 class="title is-4 section-title mt-6">Waiver & Consent</h2>
+      <div class="field">
+        <div class="control">
+          <textarea class="textarea" readonly style="min-height: 150px;">
+I, the parent or legal guardian of the participant, give permission for my child to take part in the Moroccan Youth Athletic Festival. I understand that participation in sports involves certain risks of injury and voluntarily assume all such risks. I release MASAR, event organizers, coaches, and volunteers from any liability for injuries or damages that may occur during the event. I authorize emergency medical treatment if needed and accept responsibility for any associated costs. I also give permission for my child's photos or videos to be used for promotional purposes without compensation. I confirm my child is in good health and able to participate.
+          </textarea>
+        </div>
+      </div>
+      <div class="field">
+        <div class="control">
+          <label class="checkbox">
+            <input type="checkbox" name="Waiver Consent" required> 
+            I have read and agree to the above waiver.
+          </label>
+        </div>
+      </div>
+
+      <div id="total-due" class="notification is-info" style="display:none; font-weight:bold; margin-top:20px;">
+        Total Due: $0
+      </div>
+      
+      <div id="proceed-container" class="field mt-5">
+        <div class="control">
+          <button class="button is-warning is-medium" type="button" onclick="startPayPal()">
+            Proceed to Payment
+          </button>
+        </div>
+      </div>
+      
+      <div id="paypal-button-container" style="display:none;" class="mt-4"></div>
+    </form>
   </div>
-  <div class="field"><div class="control"><label class="checkbox"><input type="checkbox" name="Waiver Consent" required> I have read and agree to the above waiver.</label></div></div>
+</div>
 
-  <div id="total-due" class="notification is-info" style="display:none; font-weight:bold; margin-top:20px;">Total Due: $0</div>
-  <div id="proceed-container" class="field mt-5"><div class="control"><button class="button is-warning" type="button" onclick="startPayPal()">Proceed to Payment</button></div></div>
-  <div id="paypal-button-container" style="display:none;" class="mt-4"></div>
-</form>
+<!-- Font Awesome for icons -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
 <script>
 function updateTotalAmount() {
@@ -77,24 +162,52 @@ function addParticipant() {
   const id = `participant-${Date.now()}`;
   const index = container.children.length;
   container.insertAdjacentHTML('beforeend', `
-    <div class="box mt-4" id="${id}">
+    <div class="box participant-box" id="${id}">
       <div class="is-flex is-justify-content-space-between is-align-items-center mb-3">
         <h3 class="title is-5">Participant ${index + 1}</h3>
-        <button type="button" class="delete" onclick="removeParticipant('${id}')"></button>
+        <button type="button" class="delete is-medium" onclick="removeParticipant('${id}')"></button>
       </div>
-      <div class="field"><label class="label">First Name</label><div class="control"><input class="input" type="text" name="Participant First Name[]" required></div></div>
-      <div class="field"><label class="label">Last Name</label><div class="control"><input class="input" type="text" name="Participant Last Name[]" required></div></div>
-      <div class="field"><label class="label">Date of Birth</label><div class="control"><input class="input" type="date" name="Participant DOB[]" required></div></div>
+      <div class="field">
+        <label class="label">First Name</label>
+        <div class="control">
+          <input class="input" type="text" name="Participant First Name[]" required>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Last Name</label>
+        <div class="control">
+          <input class="input" type="text" name="Participant Last Name[]" required>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Date of Birth</label>
+        <div class="control">
+          <input class="input" type="date" name="Participant DOB[]" required>
+        </div>
+      </div>
       <div class="field">
         <label class="label">Gender</label>
         <div class="control">
-          <label class="radio"><input type="radio" name="Gender-${index}" value="boy" required onchange="toggleSoccerLevel('${id}', true)"> Boy (Soccer)</label>
-          <label class="radio"><input type="radio" name="Gender-${index}" value="girl" onchange="toggleSoccerLevel('${id}', false)"> Girl (Race)</label>
+          <label class="radio">
+            <input type="radio" name="Gender[${index}]" value="boy" required onchange="toggleSoccerLevel('${id}', true)">
+            Boy (Soccer)
+          </label>
+          <label class="radio">
+            <input type="radio" name="Gender[${index}]" value="girl" onchange="toggleSoccerLevel('${id}', false)">
+            Girl (Race)
+          </label>
         </div>
       </div>
       <div class="field soccer-level" id="soccer-${id}">
         <label class="label">Soccer Level</label>
-        <div class="control"><div class="select"><select name="Soccer Level[]"><option value="recreational">Recreational</option><option value="travel">Travel</option></select></div></div>
+        <div class="control">
+          <div class="select is-fullwidth">
+            <select name="Soccer Level[]">
+              <option value="recreational">Recreational</option>
+              <option value="travel">Travel</option>
+            </select>
+          </div>
+        </div>
       </div>
     </div>
   `);
@@ -105,8 +218,8 @@ function removeParticipant(id) {
   const box = document.getElementById(id);
   if (box) {
     box.remove();
+    updateTotalAmount();
   }
-  updateTotalAmount();
 }
 
 function toggleSoccerLevel(participantId, show) {
@@ -150,7 +263,27 @@ function startPayPal() {
     createOrder: function(data, actions) {
       const participantCount = participantBoxes.length;
       const totalAmount = participantCount * 10;
-      return actions.order.create({purchase_units: [{amount: {value: totalAmount.toFixed(2)}}]});
+      return actions.order.create({
+        purchase_units: [{
+          amount: {
+            value: totalAmount.toFixed(2),
+            breakdown: {
+              item_total: {
+                value: totalAmount.toFixed(2),
+                currency_code: "USD"
+              }
+            }
+          },
+          items: [{
+            name: "MYAF Registration",
+            unit_amount: {
+              value: "10.00",
+              currency_code: "USD"
+            },
+            quantity: participantCount.toString()
+          }]
+        }]
+      });
     },
     onApprove: function(data, actions) {
       return actions.order.capture().then(function(details) {
@@ -163,20 +296,51 @@ function startPayPal() {
 function sendFormData() {
   const form = document.getElementById('form');
   const formData = new FormData(form);
+  
+  // Collect all form data including gender values
+  const formDataObj = {};
+  formData.forEach((value, key) => {
+    if (key.startsWith('Gender[')) {
+      if (!formDataObj['Gender']) formDataObj['Gender'] = [];
+      formDataObj['Gender'].push(value);
+    } else if (key.endsWith('[]')) {
+      const cleanKey = key.replace('[]', '');
+      if (!formDataObj[cleanKey]) formDataObj[cleanKey] = [];
+      formDataObj[cleanKey].push(value);
+    } else {
+      formDataObj[key] = value;
+    }
+  });
+
+  // Convert to URL-encoded string
   const keyValuePairs = [];
-  for (let pair of formData.entries()) {
-    keyValuePairs.push(`${pair[0]}=${encodeURIComponent(pair[1])}`);
+  for (const key in formDataObj) {
+    if (Array.isArray(formDataObj[key])) {
+      formDataObj[key].forEach(val => {
+        keyValuePairs.push(`${encodeURIComponent(key)}=${encodeURIComponent(val)}`);
+      });
+    } else {
+      keyValuePairs.push(`${encodeURIComponent(key)}=${encodeURIComponent(formDataObj[key])}`);
+    }
   }
+
   const formDataString = keyValuePairs.join("&");
+  
   fetch("https://script.google.com/macros/s/AKfycbxxtQnrbYjg06wBU30dmORSk3ef_bDZ-Qju5vaLJXx14vM80bNKFbsOo59GA_8do0Nw/exec", {
     method: "POST",
     body: formDataString,
-    headers: {"Content-Type": "text/plain;charset=utf-8"}
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    }
   }).then(response => {
-    window.location.href = "thank-you.html";
+    if (response.ok) {
+      window.location.href = "thank-you.html";
+    } else {
+      throw new Error('Network response was not ok');
+    }
   }).catch(error => {
     console.error('Form submit error:', error);
-    alert('There was a problem submitting your registration.');
+    alert('There was a problem submitting your registration. Please try again.');
   });
 }
 </script>
