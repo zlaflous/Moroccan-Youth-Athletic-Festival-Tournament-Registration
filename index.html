@@ -88,8 +88,8 @@ function addParticipant() {
       <div class="field">
         <label class="label">Gender</label>
         <div class="control">
-          <label class="radio"><input type="radio" name="Gender-${index}" value="boy" required onchange="toggleSoccerLevel('${id}', true)"> Boy (Soccer)</label>
-          <label class="radio"><input type="radio" name="Gender-${index}" value="girl" onchange="toggleSoccerLevel('${id}', false)"> Girl (Race)</label>
+          <label class="radio"><input type="radio" name="Participant Gender[]" value="boy" required onchange="toggleSoccerLevel('${id}', true)"> Boy (Soccer)</label>
+          <label class="radio"><input type="radio" name="Participant Gender[]" value="girl" onchange="toggleSoccerLevel('${id}', false)"> Girl (Race)</label>
         </div>
       </div>
       <div class="field soccer-level" id="soccer-${id}">
@@ -136,7 +136,7 @@ function startPayPal() {
     const firstName = box.querySelector('input[name="Participant First Name[]"]').value.trim();
     const lastName = box.querySelector('input[name="Participant Last Name[]"]').value.trim();
     const dob = box.querySelector('input[name="Participant DOB[]"]').value.trim();
-    const genderSelected = box.querySelector('input[type="radio"]:checked');
+    const genderSelected = box.querySelector('input[name="Participant Gender[]"]:checked');
     if (!firstName || !lastName || !dob || !genderSelected) {
       alert("Please fill out all fields for every participant.");
       return;
