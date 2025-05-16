@@ -5,7 +5,7 @@
   <title>Moroccan Youth Athletic Festival - Spring 2025 Registration</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-  <script src="https://www.paypal.com/sdk/js?client-id=ASNXc-c_Ozu9IRC4ILp5oC6VOLz18amVlbYfVnKYA2kvJIBlQnoLUPP-Rdz4J_vyMD5toHUwg-OQH-OX&currency=USD"></script>
+  <script src=""></script>
 </head>
 
 <body>
@@ -22,10 +22,27 @@
   </div>
 </section>
 
+<!-- Added notification about girls registration being closed -->
+<div class="container mt-4">
+  <div class="notification is-danger">
+    <button class="delete"></button>
+    <strong>Important Notice:</strong> Registration for girls' races has been closed as we've reached the maximum number of participants. Only boys' soccer registration remains available.
+  </div>
+</div>
+
 <form id="form" class="container m-4 pl-4" method="POST">
   <h2 class="title is-4 mt-5">Parent Information</h2>
   <div class="field"><label class="label">Full Name</label><div class="control"><input class="input" type="text" name="Parent Full Name" required></div></div>
-  <div class="field"><label class="label">Email</label><div class="control"><input class="input" type="email" name="Parent Email" required></div></div>
+  <div class="field">
+  <label class="label">Email</label>
+  <div class="control">
+    <input class="input" type="email" name="Parent Email" required>
+  </div>
+  <p class="help has-text-danger">
+    Please use an email address you can access - we'll send confirmation emails 
+    needed for check-in to this address.
+  </p>
+</div>
   <div class="field"><label class="label">Phone Number</label><div class="control"><input class="input" type="tel" name="Parent Phone" required></div></div>
 
   <h2 class="title is-4 mt-5">Participant Information</h2>
@@ -36,7 +53,7 @@
   <div class="field">
     <div class="control">
       <textarea class="textarea" readonly>
-I, the parent or legal guardian of the participant, give permission for my child to take part in the Moroccan Youth Athletic Festival. I understand that participation in sports involves certain risks of injury and voluntarily assume all such risks. I release MASAR, event organizers, coaches, and volunteers from any liability for injuries or damages that may occur during the event. I authorize emergency medical treatment if needed and accept responsibility for any associated costs. I also give permission for my child’s photos or videos to be used for promotional purposes without compensation. I confirm my child is in good health and able to participate.
+I, the parent or legal guardian of the participant, give permission for my child to take part in the Moroccan Youth Athletic Festival. I understand that participation in sports involves certain risks of injury and voluntarily assume all such risks. I release Moroccan Youth Athletic Festival, organizers, coaches, and volunteers from any liability for injuries or damages that may occur during the event. I authorize emergency medical treatment if needed and accept responsibility for any associated costs. I also give permission for my child's photos or videos to be used for promotional purposes without compensation. I confirm my child is in good health and able to participate.
       </textarea>
     </div>
   </div>
@@ -53,7 +70,7 @@ function updateTotalAmount() {
   const totalDueDiv = document.getElementById('total-due');
   if (participantCount > 0) {
     totalDueDiv.style.display = 'block';
-    totalDueDiv.textContent = `Total Due: $${participantCount * 10}`;
+    totalDueDiv.textContent = `Total Due: $${participantCount * 20}`;
   } else {
     totalDueDiv.style.display = 'none';
   }
@@ -75,15 +92,24 @@ function addParticipant() {
       <div class="field">
         <label class="label">Gender</label>
         <div class="control">
-          <label class="radio"><input type="radio" name="Participant Gender[${index}]" value="boy" required onchange="toggleSoccerLevel('${id}', true)"> Boy (Soccer)</label>
-          <label class="radio"><input type="radio" name="Participant Gender[${index}]" value="girl" onchange="toggleSoccerLevel('${id}', false)"> Girl (Race)</label>
+          <label class="radio"><input type="radio" name="Participant Gender[${index}]" value="boy" required checked> Boy (Soccer)</label>
         </div>
       </div>
       <div class="field soccer-level" id="soccer-${id}">
-        <label class="label">Soccer Level</label>
-        <div class="control"><div class="select"><select name="Soccer Level[]"><option value="recreational">Recreational</option><option value="travel">Travel</option></select></div></div>
-      </div>
+  <label class="label">Soccer Level</label>
+  <div class="control">
+    <div class="select">
+      <select name="Soccer Level[]">
+        <option value="recreational">Recreational</option>
+        <option value="travel">Travel</option>
+      </select>
     </div>
+  </div>
+  <p class="help has-text-danger">
+    Recreational – For players who play mainly for fun and local competition.<br>
+    Travel – For competitive players who play in higher-level leagues and travel for games.
+  </p>
+</div>
   `);
   updateTotalAmount();
 }
@@ -136,7 +162,7 @@ function startPayPal() {
   paypal.Buttons({
     createOrder: function(data, actions) {
       const participantCount = participantBoxes.length;
-      const totalAmount = participantCount * 10;
+      const totalAmount = participantCount * 20;
       return actions.order.create({purchase_units: [{amount: {value: totalAmount.toFixed(2)}}]});
     },
     onApprove: function(data, actions) {
@@ -174,6 +200,15 @@ function sendFormData() {
     alert('There was a problem submitting your registration.');
   });
 }
+
+// Add click handler for notification close button
+document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('delete')) {
+      event.target.parentNode.style.display = 'none';
+    }
+  });
+});
 </script>
 
 </body>
